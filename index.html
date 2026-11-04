@@ -65,6 +65,7 @@ pre{white-space:pre-wrap;word-wrap:break-word;margin:0;font:inherit;background:v
 </header>
 <div class="grid">
 <div class="panel">
+<div id="visualCharacterBuilderHost"></div>
 <label for="name">Name (optional)</label>
 <input type="text" id="name" placeholder="Leave blank to generate">
 <label for="niche">Niche</label><select id="niche"><option value="lifestyle">Lifestyle</option><option value="fitness">Fitness and wellness</option><option value="combat">Combat sports</option><option value="fashion">Fashion and styling</option><option value="travel">Travel</option><option value="food">Food and cooking</option><option value="tech">Tech and gadgets</option><option value="gaming">Gaming</option></select><label for="plat">Platform</label><select id="plat"><option value="ig">Instagram</option><option value="tt">TikTok</option><option value="yt">YouTube</option></select><label for="tone">Voice</label>
@@ -147,10 +148,12 @@ var featureData={
 };
 var featureSelections={};
 function featurePromptText(){var bits=[];Object.keys(featureSelections).forEach(function(k){if(featureSelections[k])bits.push(k.toLowerCase()+": "+featureSelections[k])});return bits.length?"Create a fictional adult character with the following appearance: "+bits.join("; ")+". Keep these selected features consistent across all images.":""}
+function featureLookText(){var bits=[];Object.keys(featureSelections).forEach(function(k){if(featureSelections[k])bits.push(k.toLowerCase()+": "+featureSelections[k])});return bits.length?" Selected visual features: "+bits.join("; ")+".":""}
 function featureBuilderMarkup(){var h='<div class="card" id="visualCharacterBuilder"><div class="head"><h3>Visual Character Builder</h3><span class="fmt">Tap to select</span></div><p class="builder-intro">Choose features from the visual examples. Your selections become a reusable character description and image prompt.</p><div class="feature-groups">';Object.keys(featureData).forEach(function(group){h+='<section class="feature-group"><h4>'+esc(group)+'</h4><div class="feature-options">';featureData[group].forEach(function(opt){var selected=featureSelections[group]===opt[0],bg=opt[2]?'linear-gradient(135deg,'+opt[2]+',#f4e9dc)':'linear-gradient(145deg,#f1e5dc,#d8c4b9)';h+='<button type="button" class="feature-option" data-feature-group="'+esc(group)+'" data-feature-value="'+esc(opt[0])+'" aria-pressed="'+selected+'"><span class="feature-art" style="background:'+bg+'">'+opt[1]+'</span><span>'+esc(opt[0])+'</span></button>'});h+='</div></section>'});h+='</div><div class="feature-actions"><button type="button" class="small" id="buildFeaturePrompt">Create character prompt</button><button type="button" class="small" id="clearFeatureChoices">Clear selections</button></div><textarea id="featurePrompt" class="feature-prompt" placeholder="Your generated character prompt will appear here...">'+esc(featurePromptText())+'</textarea><div class="feature-actions"><button type="button" class="small" id="useFeaturePrompt">Use in image generator</button><button type="button" class="small" id="copyFeaturePrompt">Copy prompt</button></div></div>';return h}
 
+$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();
 function build(){
-var v=D.vibes[$("vibe").value],t=D.tones[$("tone").value],nm=$("name").value.trim();
+var v=D.vibes[$("vibe").value,t=D.tones[$("tone").value],nm=$("name").value.trim();
 var fn=nm||pick(D.first)+" "+pick(D.last);
 var N=D.niches[$("niche").value];
 var p={name:fn,age:24+Math.floor(Math.random()*9),city:pick(D.city),job:pick(N.jobs),hair:pick(D.hair),skin:pick(D.skin),eyes:pick(D.eyes),hobbies:some(N.hobbies,3),drink:pick(D.drink),pillars:some(N.pillars,4),v:v,t:t,tone:$("tone").value,nk:$("niche").value,N:N};
@@ -158,7 +161,7 @@ p.handle="@"+fn.toLowerCase().replace(/[^a-z]/g,"").slice(0,14)+"."+p.city.toLow
 p.tags=some(N.tags,5);
 if(p.tags.indexOf("aigenerated")<0)p.tags[0]="aigenerated";
 p.story="Born and raised in "+p.city+", "+fn.split(" ")[0]+" is "+p.job+". "+N.why+" Her feed covers "+p.pillars.join(", ").toLowerCase()+".";
-p.look="Adult woman, about "+p.age+", "+p.hair+", "+p.skin+", "+p.eyes+". Palette: "+v.pal+". Signature light: "+v.light+".";
+p.look="Adult woman, about "+p.age+", "+p.hair+", "+p.skin+", "+p.eyes+". Palette: "+v.pal+". Signature light: "+v.light+"."+featureLookText();
 return p}
 function makeWeek(){
 var idx={3:[0,2,4],5:[0,1,2,4,5],7:[0,1,2,3,4,5,6]}[+$("freq").value];
@@ -179,7 +182,7 @@ h+='<div class="card"><div class="head"><h3>Look guide</h3><span><button class="
 h+='<div class="card"><div class="head"><h3>'+(week.length>7?"30-day plan":"Week of content")+'</h3><span><button class="small" data-copy="all">Copy all</button> <button class="small" data-copy="export">Export .md</button></span></div>';
 week.forEach(function(w,i){h+='<div class="day"><div class="top"><strong>'+esc(w.day)+'</strong><span class="fmt">'+esc(w.fmt)+'</span></div><p>'+esc(w.cap)+'</p><div class="tags" style="margin:0 0 8px">'+w.tags.map(function(x){return "<span>#"+esc(x)+"</span>"}).join("")+'</div><details><summary class="fmt" style="cursor:pointer">Image prompt</summary><pre style="margin-top:8px">'+esc(w.prompt)+'</pre></details><button class="small" style="margin-top:8px" data-copy="d'+i+'">Copy caption</button>'+(sampleFn?' <button class="small" style="margin-top:8px" data-rw="'+i+'">Rewrite with AI</button>':'')+'</div>'});
 h+='<p class="small-note">Captions are templates. Edit them to fit your voice before posting.</p></div>';
-h+=featureBuilderMarkup();h+='<div class="card image-maker"><div class="head"><h3>AI image generator</h3><span class="fmt">Powered by fal.ai / Cloudflare fallback</span></div>'+
+h+='<div class="card image-maker"><div class="head"><h3>AI image generator</h3><span class="fmt">Powered by fal.ai / Cloudflare fallback</span></div>'+
 '<p class="small-note" style="margin:0">Create an image of this persona using the look guide and a selected post prompt.</p>'+
 '<label for="imgpost">Use a post prompt</label><select id="imgpost">'+week.map(function(w,i){return '<option value="'+i+'">'+esc(w.day)+' · '+esc(w.fmt)+'</option>'}).join('')+'<option value="custom">Write my own prompt</option></select>'+
 '<label for="imgprompt">Image prompt</label><textarea id="imgprompt">'+esc(P.look+' '+(week[0]?week[0].prompt:''))+'</textarea>'+
@@ -323,6 +326,7 @@ var L=$("len").value==="30",dl=days,wd=["Monday","Tuesday","Wednesday","Thursday
 var fmts={ig:"Reel, Carousel, Story, or Photo post",tt:"TikTok video or Photo carousel",yt:"YouTube Short or Community post"}[pl];
 var s="Create a fictional, clearly AI-generated social media character and a content week. Rules: the character is an adult aged 24 to 35 (default to a woman unless the creator's direction says otherwise); everything is family-friendly with no sexual or suggestive content; no real people and no brand endorsements; no medical claims, extreme diets, or weight-cutting advice. Be specific and original: avoid cliches and generic names, and give the persona real texture (a small contradiction, a running joke, a signature habit).\n";
 s+="Niche: "+$("niche").selectedOptions[0].text+". Voice: "+$("tone").selectedOptions[0].text+". Visual aesthetic: "+$("vibe").selectedOptions[0].text+". Platform: "+$("plat").selectedOptions[0].text+" (use only these formats: "+fmts+").\n";
+if(featurePromptText())s+="Mandatory visual character-builder selections; preserve these exact traits in persona.look and every image_prompt: "+featurePromptText()+"\n";
 if(nm)s+="The character's name is "+nm+".\n";
 if(dir)s+="Extra direction from the creator: "+dir+"\n";
 if(keep)s+="Reuse this persona exactly as given and write a fresh week: "+JSON.stringify({name:P.name,handle:P.handle,age:P.age,city:P.city,backstory:P.story,look:P.look,voice:P.toneText,pillars:P.pillars})+"\n";
@@ -339,7 +343,7 @@ var L=$("len").value==="30";
 sampleFn.json(aiPrompt(keep)).then(function(r){
 var w=(r&&r.week)||[];
 if(!w.length)throw {code:"empty"};
-if(!keep){var pr=r.persona||{};P={ai:true,name:String(pr.name||"Unnamed"),handle:String(pr.handle||""),age:pr.age||"",city:String(pr.city||""),story:String(pr.backstory||""),look:String(pr.look||""),nk:$("niche").value,tone:$("tone").value,toneText:String(pr.voice||""),hobbies:lst(pr.favorite_things,4),drink:"",pillars:lst(pr.pillars,5),tags:lst(pr.hashtags,6),N:{label:$("niche").selectedOptions[0].text}}}
+if(!keep){var pr=r.persona||{};P={ai:true,name:String(pr.name||"Unnamed"),handle:String(pr.handle||""),age:pr.age||"",city:String(pr.city||""),story:String(pr.backstory||""),look:String(pr.look||"")+featureLookText(),nk:$("niche").value,tone:$("tone").value,toneText:String(pr.voice||""),hobbies:lst(pr.favorite_things,4),drink:"",pillars:lst(pr.pillars,5),tags:lst(pr.hashtags,6),N:{label:$("niche").selectedOptions[0].text}}}
 week=w.slice(0,31).map(function(x){return {day:String(x.day||""),fmt:String(x.format||""),cap:String(x.caption||""),prompt:(L?P.look+" ":"")+String(x.image_prompt||""),tags:lst(x.hashtags,4)}});
 render();save();setStatus("")
 }).catch(function(e){
