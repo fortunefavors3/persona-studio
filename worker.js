@@ -54,6 +54,7 @@ export default {
               num_inference_steps: 28,
               guidance_scale: 3.5,
               enable_safety_checker: !mature,
+              safety_tolerance: 5,
               output_format: "jpeg",
               ...(referenceImage ? { image_urls: [referenceImage] } : {}),
               ...(seed !== null ? { seed } : {})
