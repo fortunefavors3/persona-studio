@@ -162,7 +162,7 @@ h+='<div class="card image-maker"><div class="head"><h3>AI image generator</h3><
 '<p class="small-note" style="margin:0">Create an image of this persona using the look guide and a selected post prompt.</p>'+
 '<label for="imgpost">Use a post prompt</label><select id="imgpost">'+week.map(function(w,i){return '<option value="'+i+'">'+esc(w.day)+' · '+esc(w.fmt)+'</option>'}).join('')+'<option value="custom">Write my own prompt</option></select>'+
 '<label for="imgprompt">Image prompt</label><textarea id="imgprompt">'+esc(P.look+' '+(week[0]?week[0].prompt:''))+'</textarea>'+
-'<p class="warning">Uses Cloudflare Workers AI with FLUX.1 Schnell. No third-party API key is needed. Cloudflare includes a limited free daily allowance; generation pauses if it is exhausted.</p>'+
+'<div class="row"><input type="checkbox" id="matureMode"><label for="matureMode" style="margin:0;font-weight:400">Mature Content Mode (18+)</label></div><p class="warning">Mature mode uses fal.ai only when your account is authorized for it. You must be 18 or older. Provider safety rules still apply. This feature does not permit sexual content involving minors, non-consensual intimate imagery, or other prohibited content.</p><p class="small-note" id="providerStatus">Checking image providers…</p>'+
 '<div class="img-actions"><button class="main" type="button" id="makeimage" style="margin:0">Generate image</button><button type="button" class="small" id="copyimgprompt">Copy prompt</button></div>'+
 '<p class="small-note" id="imgstatus" role="status" aria-live="polite"></p><img id="imgpreview" class="preview" alt="Generated AI persona image"><a id="imgdownload" hidden download="persona-studio-image.jpg">Download generated image</a></div>';
 $("out").innerHTML=h}
@@ -170,6 +170,7 @@ function copy(txt,btn){
 var done=function(){var o=btn.textContent;btn.textContent="Copied";setTimeout(function(){btn.textContent=o},1400)};
 try{navigator.clipboard.writeText(txt).then(done,function(){fallback()})}catch(e){fallback()}
 function fallback(){var a=document.createElement("textarea");a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){}document.body.removeChild(a)}}
+fetch("/api/config").then(function(r){return r.json()}).then(function(c){var el=$("providerStatus");if(!el)return;el.textContent=c.falAvailable?(c.falMatureAuthorized?"Cloudflare default · fal.ai mature mode authorized":"Cloudflare default · fal.ai connected; mature mode not authorized"):"Cloudflare default · fal.ai not configured yet";var t=$("matureMode");if(t&&!c.falMatureAuthorized){t.disabled=true;t.checked=false}}).catch(function(){var el=$("providerStatus");if(el)el.textContent="Cloudflare image generation is available; provider status could not be checked."});
 var imgUrl=null;
 $("out").addEventListener("change",function(e){
 if(e.target&&e.target.id==="imgpost"){var v=e.target.value;if(v!=="custom"&&week[+v])$("imgprompt").value=P.look+" "+week[+v].prompt}
@@ -180,7 +181,7 @@ if(e.target&&e.target.id==="makeimage"){
 var btn=e.target,prompt=$("imgprompt").value.trim();
 if(!prompt){$("imgstatus").textContent="Enter an image prompt first.";return}
 btn.disabled=true;btn.textContent="Generating…";$("imgstatus").textContent="Generating image with Cloudflare Workers AI…";
-fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt})}).then(function(res){if(!res.ok)return res.json().catch(function(){return {error:"Image request failed (HTTP "+res.status+")."}}).then(function(data){throw new Error(data.error||"Image request failed (HTTP "+res.status+").")});return res.blob()}).then(function(blob){
+fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,mature:!!$("matureMode")&&$("matureMode").checked})}).then(function(res){if(!res.ok)return res.json().catch(function(){return {error:"Image request failed (HTTP "+res.status+")."}}).then(function(data){throw new Error(data.error||"Image request failed (HTTP "+res.status+").")});return res.blob()}).then(function(blob){
 if(!blob.type||blob.type.indexOf("image/")!==0)throw new Error("The service did not return an image.");
 if(imgUrl)URL.revokeObjectURL(imgUrl);imgUrl=URL.createObjectURL(blob);
 $("imgpreview").src=imgUrl;$("imgpreview").style.display="block";$("imgdownload").href=imgUrl;$("imgdownload").hidden=false;
