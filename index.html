@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Persona Studio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=DM+Sans:wght@400;500&display=swap">
+<style>
+:root{--bg:#f3f0f7;--surface:#fff;--ink:#231f33;--mute:#6b6580;--line:#ddd7ea;--accent:#6c4df6;--accent-ink:#fff;--sun:#f2b134;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#16131f;--surface:#211d2e;--ink:#f0ecfa;--mute:#a49dbb;--line:#352f48;--accent:#9a85ff;--accent-ink:#16131f}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#16131f;--surface:#211d2e;--ink:#f0ecfa;--mute:#a49dbb;--line:#352f48;--accent:#9a85ff;--accent-ink:#16131f}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "DM Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque","DM Sans",system-ui,sans-serif;line-height:1.1;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 48px}
+header{padding:20px 0 8px}
+h1{font-size:clamp(2rem,7vw,3.4rem);font-weight:700;letter-spacing:-.02em}
+header p{color:var(--mute);max-width:52ch;margin:10px 0 0}
+.grid{display:grid;gap:20px;margin-top:20px}
+@media(min-width:820px){.grid{grid-template-columns:300px 1fr;align-items:start}.panel{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}}
+.panel,.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+label{display:block;font-weight:500;font-size:.9rem;margin:14px 0 6px}
+label:first-child{margin-top:0}
+input[type=text],select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.row{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:.9rem}
+.row input{width:18px;height:18px;accent-color:var(--accent)}
+button{font:inherit;font-weight:500;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 14px}
+button.main{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);width:100%;margin-top:18px;padding:12px;font-size:1rem}
+button.small{padding:6px 10px;font-size:.82rem}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.out{display:grid;gap:20px}
+.hero{border-left:6px solid var(--sun)}
+.hero h2{font-size:clamp(1.8rem,5vw,2.6rem)}
+.hero .meta{color:var(--mute);margin:6px 0 12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tags span{background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:3px 11px;font-size:.85rem}
+.facts{display:grid;gap:12px;margin-top:14px}
+@media(min-width:560px){.facts{grid-template-columns:1fr 1fr}}
+.facts b{display:block;font-size:.85rem;color:var(--mute);font-weight:500}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+h3{font-size:1.25rem}
+pre{white-space:pre-wrap;word-wrap:break-word;margin:0;font:inherit;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font-size:.92rem}
+.scroll{overflow-x:auto}
+.day{border-top:1px solid var(--line);padding:14px 0}
+.day:first-of-type{border-top:0;padding-top:0}
+.day .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.day strong{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1.05rem}
+.fmt{color:var(--mute);font-size:.85rem}
+.day p{margin:8px 0}
+.small-note{color:var(--mute);font-size:.82rem;margin-top:10px}
+.hi{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:.88rem}
+.cmp{display:grid;gap:16px}@media(min-width:560px){.cmp{grid-template-columns:1fr 1fr}}
+.cc b{font-size:.85rem;color:var(--mute);font-weight:500}.cc p{margin:2px 0 10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Persona Studio</h1>
+<p>Create an AI influencer in one tap: a character, a consistent look for your image tool, and a week of captions. Everything here is clearly labeled as AI-generated.</p>
+</header>
+<div class="grid">
+<div class="panel">
+<label for="name">Name (optional)</label>
+<input type="text" id="name" placeholder="Leave blank to generate">
+<label for="niche">Niche</label><select id="niche"><option value="lifestyle">Lifestyle</option><option value="fitness">Fitness and wellness</option><option value="combat">Combat sports</option><option value="fashion">Fashion and styling</option><option value="travel">Travel</option><option value="food">Food and cooking</option><option value="tech">Tech and gadgets</option><option value="gaming">Gaming</option></select><label for="plat">Platform</label><select id="plat"><option value="ig">Instagram</option><option value="tt">TikTok</option><option value="yt">YouTube</option></select><label for="tone">Voice</label>
+<select id="tone"><option value="warm">Warm and friendly</option><option value="playful">Playful</option><option value="calm">Calm and minimal</option><option value="bold">Bold and direct</option></select>
+<label for="vibe">Aesthetic</label>
+<select id="vibe"><option value="cozy">Cozy neutrals</option><option value="sunny">Sunny and bright</option><option value="urban">City and clean</option><option value="earthy">Earthy and slow</option></select>
+<label for="freq">Posts per week</label><select id="freq"><option value="3">3</option><option value="5">5</option><option value="7" selected>7</option></select><label for="len">Plan length</label><select id="len"><option value="7">1 week</option><option value="30">30 days</option></select><div class="row"><input type="checkbox" id="emo"><label for="emo" style="margin:0;font-weight:400">Add an emoji to captions</label></div><div class="row"><input type="checkbox" id="disc" checked><label for="disc" style="margin:0;font-weight:400">Add AI disclosure to captions</label></div>
+<label for="dir">Extra direction (optional)</label><input type="text" id="dir" placeholder="e.g. Brazilian, loves surfing, dry humor"><button class="main" id="ai" hidden>Generate with AI</button><button class="main" id="gen" style="background:var(--surface);color:var(--ink);border-color:var(--line);margin-top:10px">Quick template persona</button>
+<button class="small" id="reroll" style="margin-top:10px;width:100%">New week, same persona</button><p class="small-note" id="status" role="status"></p><details id="hist" hidden style="margin-top:12px"><summary class="fmt" style="cursor:pointer">History</summary><input type="text" id="hq" placeholder="Search name or city" style="margin:8px 0"><select id="hn" aria-label="Filter by niche"></select><div id="histlist"></div><button class="small" id="hcmp" style="margin-top:8px" disabled>Compare 2 selected</button></details>
+</div>
+<div class="out" id="out" aria-live="polite">
+<div class="card"><p style="margin:0;color:var(--mute)">Choose a voice and aesthetic, then tap Generate persona.</p></div>
+</div>
+</div>
+</div>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function some(a,n){var c=a.slice(),r=[];while(r.length<n&&c.length){r.push(c.splice(Math.floor(Math.random()*c.length),1)[0])}return r}
+var D={
+first:["Maya","Tessa","Noor","Iris","Luna","Jade","Priya","Camille","Zoe","Anika","Sienna","Marguerite","Rina","Talia"],
+last:["Okafor","Lindqvist","Reyes","Hart","Moreau","Tanaka","Bell","Castillo","Nair","Whitfield","Duarte","Sato"],
+city:["Lisbon","Austin","Melbourne","Vancouver","Copenhagen","Mexico City","Seoul","Cape Town","Portland","Barcelona"],
+job:["a former barista who now runs a small plant shop","a part-time illustrator and weekend baker","a freelance photographer who loves slow mornings","a former teacher turned travel-light minimalist","a product designer who documents small daily rituals"],
+hair:["long wavy chestnut hair","a sleek dark bob","curly auburn hair worn up","shoulder-length honey-blonde hair","long black hair with loose waves","a short textured pixie cut"],
+skin:["warm olive skin","deep brown skin with freckles","fair skin with light freckles","golden tan skin","medium brown skin"],
+eyes:["hazel eyes","dark brown eyes","green eyes","grey-blue eyes"],
+hobby:["thrifting","sourdough","film photography","trail walks","journaling","houseplants","vinyl records","pottery"],
+drink:["iced oat latte","jasmine tea","cold brew","matcha","sparkling water with lime"],
+pillars:["Morning routines","Outfit ideas","Home and plants","Local cafes","Small travel","Thrift finds","Slow weekends","Honest Q&As"],
+vibes:{
+cozy:{pal:"cream, oat, terracotta, soft brown",light:"warm window light",set:["a sunlit apartment with linen curtains","a quiet corner cafe","a bedroom with soft throw blankets"],wear:["an oversized knit sweater and wide jeans","a cream cardigan and linen trousers","a brown corduroy jacket over a white tee"]},
+sunny:{pal:"butter yellow, sky blue, white, coral",light:"bright midday sun",set:["a rooftop with potted plants","a farmers market","a beach boardwalk"],wear:["a yellow sundress and white sneakers","a striped tee and denim shorts","a light blue shirt and cream skirt"]},
+urban:{pal:"charcoal, white, camel, silver",light:"soft overcast daylight",set:["a minimalist loft","a modern gallery","a quiet city street at golden hour"],wear:["a camel trench and black trousers","a tailored grey blazer and white tee","a black turtleneck and straight jeans"]},
+earthy:{pal:"sage, clay, moss, sand",light:"dappled forest light",set:["a garden with a wooden bench","a ceramic studio","a countryside trail"],wear:["a sage linen shirt and utility pants","a clay-colored knit vest and canvas pants","a moss green jacket and cream scarf"]}
+},
+tones:{
+warm:{open:["Hi friends!","Little moment for you:","Quick hello:"],close:["Tell me yours below.","Sending you a good day.","What would you add?"]},
+playful:{open:["Okay, hear me out:","Plot twist:","Tiny confession:"],close:["Rate it 1 to 10.","Team yes or team no?","Dare you to try it."]},
+calm:{open:["Slow morning.","A small note.","Today, simply:"],close:["Take what helps.","Breathe, then begin.","That is enough."]},
+bold:{open:["No fluff:","Here is the deal.","Real talk:"],close:["Try it this week.","Save this for later.","Do the thing."]}
+},
+days:[
+["Monday","Reel","My {city} morning: {drink}, {hobby}, and ten quiet minutes before the day starts. What does your first hour look like?"],
+["Tuesday","Carousel","Three outfits, one jacket. Swipe for how I style it for errands, coffee, and dinner."],
+["Wednesday","Story","Behind the scenes of this week: a messy desk, a half-finished project, and one thing I changed my mind about."],
+["Thursday","Photo","Question box is open. Ask me anything about {hobby}, {city}, or how I plan my week."],
+["Friday","Reel","Weekend plan: one favorite place in {city}, one new thing to try, and nothing scheduled after 6pm."],
+["Saturday","Carousel","Out and about in {city}. Here are my five favorite finds from today, ranked."],
+["Sunday","Photo","Sunday reset: tidy space, fresh {drink}, and a short list for the week ahead."]
+]
+};
+var PF={ig:{},tt:{Reel:"TikTok video",Carousel:"Photo carousel",Story:"Story",Photo:"Photo post"},yt:{Reel:"YouTube Short",Carousel:"Community post",Story:"Community post",Photo:"Community post"}};
+D.niches={
+lifestyle:{label:"Lifestyle",jobs:D.job,hobbies:D.hobby,pillars:D.pillars,tags:["slowliving","dailyritual","lifestylecreator","cityguide","simpleliving","outfitideas","homebody"],why:"She shares her days to show that ordinary routines can feel special.",emo:["☕","🌿","✨"],days:D.days.map(function(d){return [d[1],d[2]]})},
+fitness:{label:"Fitness and wellness",jobs:["a certified personal trainer","a former collegiate runner turned coach","a physiotherapy student who lifts","a yoga teacher and trail runner"],hobbies:["strength training","trail running","mobility work","meal prep","hiking","cycling"],pillars:["Strength basics","Mobility","Recovery days","Meal prep","Form checks","Beginner wins"],tags:["fitnessjourney","strengthtraining","mobility","homeworkout","healthyhabits","trailrunning","beginnerfitness"],why:"She shares realistic training so beginners feel welcome, not intimidated.",wear:["a fitted gym set and clean sneakers","an oversized tee and running shorts","a matching sports set and a zip jacket"],set:["a bright neighborhood gym","a trailhead at sunrise","a home workout corner"],emo:["💪","🏃‍♀️","🔥"],days:[["Reel","Monday reset: a simple 20-minute {hobby} session anyone can follow. Form first, weight second."],["Carousel","Five form checks for your next session. Swipe and screenshot the one you need most."],["Story","Behind the scenes: what I eat before training, plus my {drink}."],["Photo","Ask me anything about {hobby}, soreness, or starting from zero in {city}."],["Reel","Friday full-body flow: quick, no equipment, and honest about the hard parts."],["Carousel","Rest day ideas that still feel good: a walk, mobility, and an early night."],["Photo","Sunday plan: prep the week, stretch, and set one small goal. Tiny wins count."]]},
+combat:{label:"Combat sports",jobs:["an amateur MMA fighter","a Muay Thai competitor","a Brazilian jiu-jitsu brown belt","a boxing coach and former amateur champion"],hobbies:["sparring","grappling","pad work","film study","conditioning","recovery baths"],pillars:["Fight camp diaries","Technique breakdowns","Recovery and rest","Gym culture","Fight week vlogs","Beginner class tips"],tags:["mma","fightcamp","martialarts","bjj","muaythai","gymlife","womeninmartialarts"],why:"She documents training camps and technique so newcomers feel ready to walk into their first class.",wear:["a rash guard and fight shorts","a gym hoodie with wrapped hands","a gi with a belt"],set:["a martial arts gym with a cage","a boxing ring","a mat room with soft lighting"],emo:["🥊","🥋","💥"],days:[["Reel","Training camp, day in the life: early run, technical class, and {hobby} after dark."],["Carousel","Three beginner mistakes in the jab-cross, and how to fix each one."],["Story","Behind the scenes at the gym: wraps, pads, and the coach who keeps me honest."],["Photo","Q&A: ask me about {hobby}, your first class, or what to pack in a gym bag."],["Reel","Technique breakdown: one simple escape from bottom position, step by step."],["Carousel","Recovery day in {city}: stretching, film study, and a slow {drink}."],["Photo","Sunday reflection: what camp taught me this week. Progress is rarely loud."]]},
+fashion:{label:"Fashion and styling",jobs:["a stylist and thrift reseller","a fashion student","a boutique buyer","a vintage collector"],hobbies:["thrifting","sewing","moodboards","vintage markets","tailoring"],pillars:["Outfit formulas","Thrift hauls","Capsule wardrobe","Styling a staple","Trend or pass"],tags:["ootd","thriftfinds","capsulewardrobe","styleinspo","vintagefashion","outfitformula","personalstyle"],why:"She helps people build outfits they love from pieces they already own.",wear:["a tailored blazer, tee, and wide trousers","a vintage denim jacket and a midi skirt","a monochrome knit set and loafers"],set:["a vintage boutique","a brick-lined street","a bright studio with a clothing rack"],emo:["👗","🧥","✨"],days:[["Carousel","One staple, four ways: swipe to see how I style it for work, brunch, and night."],["Reel","Thrift haul from {city}: what I kept, what I put back, and how I decided."],["Story","Getting ready with me: the three-minute outfit formula I use on busy mornings."],["Photo","Trend or pass? Tell me which look you want me to try next."],["Reel","Capsule wardrobe check: twelve pieces, a week of outfits, no repeats."],["Carousel","Weekend outfits around {city}, with where to find similar pieces."],["Photo","Sunday closet edit: what is leaving, what is staying, and why."]]},
+travel:{label:"Travel",jobs:["a remote worker who travels light","a travel writer","a former flight attendant turned guide","a backpacker turned trip planner"],hobbies:["street food","train journeys","hostel hopping","map reading","sunrise hikes"],pillars:["Weekend itineraries","Budget tips","Packing lists","Hidden spots","Solo travel"],tags:["traveltok","traveltips","budgettravel","solotravel","weekendtrip","packinglist","wanderlust"],why:"She turns trips into simple plans anyone can copy on a modest budget.",wear:["a light rain jacket and a daypack","a linen shirt and comfortable walking shoes","a sun hat and a breezy dress"],set:["an old town square","a train platform","a lookout over the coast"],emo:["✈️","🗺️","🌍"],days:[["Reel","48 hours in {city}: where I ate, walked, and what I would skip next time."],["Carousel","My carry-on packing list for a week away. Swipe, save, and steal it."],["Story","Travel day behind the scenes: a missed turn, a good {drink}, and a lucky find."],["Photo","Question box: budget, safety, or solo travel? Ask and I will answer honestly."],["Reel","A hidden spot in {city} most visitors miss, and how to get there."],["Carousel","Five things I wish I knew before my first trip, ranked by usefulness."],["Photo","Sunday dream list: the next three places I want to visit, and why."]]},
+food:{label:"Food and cooking",jobs:["a home cook and recipe developer","a former line cook","a baker with a tiny market stall","a nutrition student who loves dinner parties"],hobbies:["baking","farmers markets","fermenting","meal prep","coffee brewing"],pillars:["Weeknight dinners","Baking","Budget meals","Kitchen tools","Market hauls"],tags:["homecooking","easyrecipes","weeknightdinner","baking","mealprep","foodtok","budgetmeals"],why:"She makes cooking feel doable, with short recipes and honest results.",wear:["an apron over a linen shirt","a cozy sweater with rolled sleeves","a denim apron and a bandana"],set:["a bright home kitchen","a farmers market stall","a rustic table with fresh ingredients"],emo:["🍳","🥖","🍋"],days:[["Reel","Ten-minute weeknight dinner: one pan, simple ingredients, and a {drink} on the side."],["Carousel","Pantry staples I always keep, and three meals each one makes possible."],["Story","Market run in {city}: what looked best, what I bought, and what I made."],["Photo","Cooking Q&A: ask about {hobby}, substitutions, or fixing a dish that went wrong."],["Reel","Friday bake: a forgiving recipe for beginners, with every step shown."],["Carousel","Budget meal plan for the week with a full shopping list. Swipe to save."],["Photo","Sunday table: slow cooking, good company, and leftovers for Monday."]]},
+tech:{label:"Tech and gadgets",jobs:["a software engineer who reviews gadgets","a product designer and desk-setup fan","a former IT support tech turned reviewer","a data analyst who tests apps"],hobbies:["desk setups","mechanical keyboards","automation","gadget testing","photography gear"],pillars:["Gadget reviews","Desk setups","App picks","Productivity systems","Tech explained simply"],tags:["techreview","desksetup","productivity","gadgets","appsiuse","workfromhome","techtok"],why:"She tests tech so you do not have to, and explains the results in plain language.",wear:["a plain hoodie and headphones","a crewneck and glasses","a utility jacket and a backpack"],set:["a tidy home office with two monitors","a minimalist desk with plants","a bright co-working space"],emo:["💻","⚡","🎧"],days:[["Reel","Desk setup update: one small change that made my workday calmer."],["Carousel","Five apps I use every week, what they replaced, and what they cost."],["Story","Unboxing and first impressions: honest notes after one hour of use."],["Photo","Ask me anything about {hobby}, gadgets, or how I organize my digital life."],["Reel","Three automations that save me an hour a week. Setup takes five minutes."],["Carousel","Worth it or skip it? My verdict on this month’s gadgets, with reasons."],["Photo","Sunday reset: backups, inbox zero, and a clean desktop for the week."]]},
+gaming:{label:"Gaming",jobs:["a streamer and speedrunner","a hobbyist game developer","an esports coach","a cozy-game reviewer"],hobbies:["speedrunning","cozy games","retro consoles","modding","strategy games"],pillars:["Game reviews","Stream highlights","Setup tours","Beginner guides","Retro finds"],tags:["gamingcommunity","streamer","cozygaming","retrogaming","gamingsetup","speedrun","gamertok"],why:"She streams and reviews games with a friendly, no-gatekeeping attitude.",wear:["a team hoodie and a headset","a graphic tee and a beanie","an oversized jersey and sneakers"],set:["a neon-lit gaming room","a shelf of retro consoles","a streaming desk with colorful lights"],emo:["🎮","🕹️","🔥"],days:[["Reel","Stream highlight: the clutch moment from last night, plus what I would do differently."],["Carousel","Five beginner tips for a new game, so your first hour is more fun."],["Story","Behind the scenes of my setup: lights, headset, and a very full {drink}."],["Photo","Poll time: what should I play next? Tell me in the comments."],["Reel","Friday {hobby} challenge: can I beat my personal best before midnight?"],["Carousel","Cozy game picks for rainy days, ranked from gentlest to most addictive."],["Photo","Sunday backlog check: what I finished, what I dropped, and what is next."]]}
+};
+var P=null,week=null;
+function build(){
+var v=D.vibes[$("vibe").value],t=D.tones[$("tone").value],nm=$("name").value.trim();
+var fn=nm||pick(D.first)+" "+pick(D.last);
+var N=D.niches[$("niche").value];
+var p={name:fn,age:24+Math.floor(Math.random()*9),city:pick(D.city),job:pick(N.jobs),hair:pick(D.hair),skin:pick(D.skin),eyes:pick(D.eyes),hobbies:some(N.hobbies,3),drink:pick(D.drink),pillars:some(N.pillars,4),v:v,t:t,tone:$("tone").value,nk:$("niche").value,N:N};
+p.handle="@"+fn.toLowerCase().replace(/[^a-z]/g,"").slice(0,14)+"."+p.city.toLowerCase().replace(/[^a-z]/g,"").slice(0,6);
+p.tags=some(N.tags,5);
+if(p.tags.indexOf("aigenerated")<0)p.tags[0]="aigenerated";
+p.story="Born and raised in "+p.city+", "+fn.split(" ")[0]+" is "+p.job+". "+N.why+" Her feed covers "+p.pillars.join(", ").toLowerCase()+".";
+p.look="Adult woman, about "+p.age+", "+p.hair+", "+p.skin+", "+p.eyes+". Palette: "+v.pal+". Signature light: "+v.light+".";
+return p}
+function makeWeek(){
+var idx={3:[0,2,4],5:[0,1,2,4,5],7:[0,1,2,3,4,5,6]}[+$("freq").value];
+var L=$("len").value==="30",seq=[];if(L){for(var j=0;j<30;j++){if(idx.indexOf(j%7)>-1)seq.push(j)}}else seq=idx;
+return seq.map(function(q){var i=q%7;var d=[(L?"Day "+(q+1)+" · ":"")+D.days[i][0]].concat(P.N.days[i]);
+var cap=d[2].replace(/\{city\}/g,P.city).replace(/\{drink\}/g,P.drink).replace(/\{hobby\}/g,pick(P.hobbies));
+var text=pick(P.t.open)+" "+cap+" "+pick(P.t.close);
+var outfit=pick(P.N.wear||P.v.wear),set=pick(P.N.set||P.v.set);
+var prompt="Photo of the same character: adult woman, "+P.hair+", "+P.skin+", "+P.eyes+", wearing "+outfit+", in "+set+", "+P.v.light+", color palette "+P.v.pal+", natural candid framing, 35mm lens, realistic skin texture, consistent face across images";
+return {day:d[0],fmt:PF[$("plat").value][d[1]]||d[1],cap:text+($("emo").checked?" "+pick(P.N.emo):""),prompt:prompt,tags:some(P.tags,3)}})}
+function discText(){return $("disc").checked?"\n\nAI-generated character. #AIgenerated":""}
+function capFull(w){return w.cap+"\n\n"+w.tags.map(function(x){return "#"+x}).join(" ")+discText()}
+function render(){
+var h='<div class="card hero"><h2>'+esc(P.name)+'</h2><p class="meta">'+esc(P.handle)+' · '+esc(P.age)+' · '+esc(P.city)+' · '+esc(P.N.label)+'</p><p style="margin:0">'+esc(P.story)+'</p>'+
+'<div class="facts"><div><b>Voice</b>'+esc(P.toneText||({warm:"Warm, welcoming, asks questions",playful:"Playful, light, a little cheeky",calm:"Calm, minimal, unhurried",bold:"Direct, confident, to the point"})[P.tone])+'</div><div><b>Favorite things</b>'+esc(P.hobbies.join(", ")+(P.drink?"; "+P.drink:""))+'</div></div>'+
+'<div class="tags">'+P.pillars.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div></div>';
+h+='<div class="card"><div class="head"><h3>Look guide</h3><span><button class="small" data-copy="sheet">Copy persona sheet</button> <button class="small" data-copy="look">Copy look</button></span></div><pre id="look">'+esc(P.look)+'\nReuse this description in every image prompt to keep her face and style consistent.</pre></div>';
+h+='<div class="card"><div class="head"><h3>'+(week.length>7?"30-day plan":"Week of content")+'</h3><span><button class="small" data-copy="all">Copy all</button> <button class="small" data-copy="export">Export .md</button></span></div>';
+week.forEach(function(w,i){h+='<div class="day"><div class="top"><strong>'+esc(w.day)+'</strong><span class="fmt">'+esc(w.fmt)+'</span></div><p>'+esc(w.cap)+'</p><div class="tags" style="margin:0 0 8px">'+w.tags.map(function(x){return "<span>#"+esc(x)+"</span>"}).join("")+'</div><details><summary class="fmt" style="cursor:pointer">Image prompt</summary><pre style="margin-top:8px">'+esc(w.prompt)+'</pre></details><button class="small" style="margin-top:8px" data-copy="d'+i+'">Copy caption</button>'+(sampleFn?' <button class="small" style="margin-top:8px" data-rw="'+i+'">Rewrite with AI</button>':'')+'</div>'});
+h+='<p class="small-note">Captions are templates. Edit them to fit your voice before posting.</p></div>';
+$("out").innerHTML=h}
+function copy(txt,btn){
+var done=function(){var o=btn.textContent;btn.textContent="Copied";setTimeout(function(){btn.textContent=o},1400)};
+try{navigator.clipboard.writeText(txt).then(done,function(){fallback()})}catch(e){fallback()}
+function fallback(){var a=document.createElement("textarea");a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){}document.body.removeChild(a)}}
+$("out").addEventListener("click",function(e){
+var rw=e.target.closest("button[data-rw]");if(rw&&P&&sampleFn){rewrite(+rw.getAttribute("data-rw"),rw);return}
+var ex=e.target.closest("button[data-copy=export]");if(ex&&P){exportMd(ex);return}
+var b=e.target.closest("button[data-copy]");if(!b||!P)return;
+var k=b.getAttribute("data-copy"),t="";
+if(k==="sheet")t=P.name+" ("+P.handle+")\nNiche: "+P.N.label+"\nVoice: "+(P.toneText||P.tone)+"\n\n"+P.story+"\n\nLook: "+P.look+"\n\nPillars: "+P.pillars.join(", ");
+else if(k==="look")t=P.look;
+else if(k==="all")t=week.map(function(w){return w.day+" ("+w.fmt+")\n"+capFull(w)}).join("\n\n---\n\n");
+else t=capFull(week[+k.slice(1)]);
+copy(t,b)});
+var sampleFn=null;
+if(window.claude&&window.claude.use){window.claude.use("sample").then(function(s){if(s){sampleFn=s;$("ai").hidden=false}}).catch(function(){})}
+function setStatus(m){$("status").textContent=m||""}
+function lst(a,n){return Array.isArray(a)?a.slice(0,n).map(String):[]}
+function aiPrompt(keep){
+var nm=$("name").value.trim(),dir=$("dir").value.trim(),n=+$("freq").value,pl=$("plat").value;
+var days={3:["Monday","Wednesday","Friday"],5:["Monday","Tuesday","Wednesday","Friday","Saturday"],7:["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]}[n];
+var L=$("len").value==="30",dl=days,wd=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],ix={3:[0,2,4],5:[0,1,2,4,5],7:[0,1,2,3,4,5,6]}[n];if(L){dl=[];for(var j=0;j<30;j++){if(ix.indexOf(j%7)>-1)dl.push("Day "+(j+1)+" ("+wd[j%7]+")")}}
+var fmts={ig:"Reel, Carousel, Story, or Photo post",tt:"TikTok video or Photo carousel",yt:"YouTube Short or Community post"}[pl];
+var s="Create a fictional, clearly AI-generated social media character and a content week. Rules: the character is an adult aged 24 to 35 (default to a woman unless the creator's direction says otherwise); everything is family-friendly with no sexual or suggestive content; no real people and no brand endorsements; no medical claims, extreme diets, or weight-cutting advice. Be specific and original: avoid cliches and generic names, and give the persona real texture (a small contradiction, a running joke, a signature habit).\n";
+s+="Niche: "+$("niche").selectedOptions[0].text+". Voice: "+$("tone").selectedOptions[0].text+". Visual aesthetic: "+$("vibe").selectedOptions[0].text+". Platform: "+$("plat").selectedOptions[0].text+" (use only these formats: "+fmts+").\n";
+if(nm)s+="The character's name is "+nm+".\n";
+if(dir)s+="Extra direction from the creator: "+dir+"\n";
+if(keep)s+="Reuse this persona exactly as given and write a fresh week: "+JSON.stringify({name:P.name,handle:P.handle,age:P.age,city:P.city,backstory:P.story,look:P.look,voice:P.toneText,pillars:P.pillars})+"\n";
+s+="Write captions for these days, in order: "+dl.join(", ")+". Each caption is "+(L?"1 to 2 short sentences":"1 to 3 sentences")+" in the character's voice, concrete and specific to the niche"+($("emo").checked?", with one fitting emoji":"")+", with no hashtags and no AI disclosure in the text. "+(L?"Each image_prompt is only the outfit, setting, lighting, and camera framing in under 30 words, safe for work (the app adds the character's look).":"Each image_prompt must be fully self-contained: restate the character's look in full, then the outfit, setting, lighting, and camera framing, safe for work.")+"\n";
+s+="Return only JSON with this shape: {\"persona\":{\"name\":\"\",\"handle\":\"\",\"age\":0,\"city\":\"\",\"backstory\":\"3 sentences\",\"voice\":\"one sentence on how they write\",\"look\":\"2 sentences: face, hair, skin, build, signature style, palette\",\"favorite_things\":[\"3 items\"],\"pillars\":[\"4 content pillars\"],\"hashtags\":[\"5 tags without #, include aigenerated\"]},\"week\":[{\"day\":\"\",\"format\":\"\",\"caption\":\"\",\"hashtags\":[\"3 tags without #\"],\"image_prompt\":\"\"}]}";
+return s}
+function ai(keep){
+if(!sampleFn)return;
+var bs=[$("ai"),$("gen"),$("reroll")];
+bs.forEach(function(b){b.disabled=true});
+setStatus("Generating with AI. This can take 15 to 30 seconds.");
+var n=+$("freq").value;
+var L=$("len").value==="30";
+sampleFn.json(aiPrompt(keep)).then(function(r){
+var w=(r&&r.week)||[];
+if(!w.length)throw {code:"empty"};
+if(!keep){var pr=r.persona||{};P={ai:true,name:String(pr.name||"Unnamed"),handle:String(pr.handle||""),age:pr.age||"",city:String(pr.city||""),story:String(pr.backstory||""),look:String(pr.look||""),nk:$("niche").value,tone:$("tone").value,toneText:String(pr.voice||""),hobbies:lst(pr.favorite_things,4),drink:"",pillars:lst(pr.pillars,5),tags:lst(pr.hashtags,6),N:{label:$("niche").selectedOptions[0].text}}}
+week=w.slice(0,31).map(function(x){return {day:String(x.day||""),fmt:String(x.format||""),cap:String(x.caption||""),prompt:(L?P.look+" ":"")+String(x.image_prompt||""),tags:lst(x.hashtags,4)}});
+render();save();setStatus("")
+}).catch(function(e){
+setStatus(e&&e.code==="not_granted"?"AI generation was declined. The template generator still works.":e&&e.code==="rate_limited"?"Too many requests. Wait a minute and try again.":"The AI response could not be used. Try again.")
+}).then(function(){bs.forEach(function(b){b.disabled=false})})}
+var KEY="ps_hist";
+function hget(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return []}}
+function hset(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
+function save(){
+if(!P)return;
+var c={};for(var k in P)if(k!=="N")c[k]=P[k];
+var a=hget().filter(function(h){return h.p.name!==c.name});
+a.unshift({t:Date.now(),p:c,w:week});
+hset(a.slice(0,12));hrender()}
+function hrender(){
+var a=hget();
+$("hist").hidden=!a.length;
+var q=($("hq").value||"").toLowerCase(),f=$("hn").value;
+$("histlist").innerHTML=a.map(function(h,i){return {h:h,i:i}}).filter(function(o){var p=o.h.p;return (!f||p.nk===f)&&(!q||(p.name+" "+p.city+" "+p.handle).toLowerCase().indexOf(q)>-1)}).map(function(o){var h=o.h,nn=D.niches[h.p.nk];return '<div class="hi"><label style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" data-c="'+o.i+'"><span>'+esc(h.p.name)+' <span class="fmt">'+esc(nn?nn.label:"")+', '+h.w.length+' posts</span></span></label><button class="small" data-h="'+o.i+'">Load</button></div>'}).join("")+'<button class="small" id="hclear" style="margin-top:8px">Clear history</button>';
+cmpState()}
+$("histlist").addEventListener("click",function(e){
+var b=e.target.closest("button");if(!b)return;
+if(b.id==="hclear"){hset([]);hrender();return}
+var h=hget()[+b.getAttribute("data-h")];if(!h)return;
+P=h.p;P.N=D.niches[P.nk]||D.niches.lifestyle;week=h.w;render()});
+function cmpState(){$("hcmp").disabled=$("histlist").querySelectorAll("input[data-c]:checked").length!==2}
+function cmp(){
+var a=hget(),ix=[].slice.call($("histlist").querySelectorAll("input[data-c]:checked")).map(function(x){return +x.getAttribute("data-c")});
+if(ix.length!==2)return;
+var cols=ix.map(function(i){var h=a[i],p=h.p,nn=D.niches[p.nk];
+return '<div class="cc"><h3>'+esc(p.name)+'</h3><p class="fmt">'+esc(p.handle)+' · '+esc(p.age)+' · '+esc(p.city)+'</p><b>Niche</b><p>'+esc(nn?nn.label:"")+'</p><b>Voice</b><p>'+esc(p.toneText||p.tone)+'</p><b>Backstory</b><p>'+esc(p.story)+'</p><b>Look</b><p>'+esc(p.look)+'</p><b>Pillars</b><p>'+esc(p.pillars.join(", "))+'</p><b>Sample captions</b>'+h.w.slice(0,3).map(function(w){return '<p>'+esc(w.cap)+'</p>'}).join("")+'</div>'});
+$("out").innerHTML='<div class="card"><div class="head"><h3>Compare</h3></div><div class="cmp">'+cols.join("")+'</div></div>'}
+function rewrite(i,btn){
+var w=week[i],o=btn.textContent;btn.disabled=true;btn.textContent="Rewriting...";
+var s='Rewrite one social media post for a fictional, clearly AI-generated character. Keep it family-friendly and safe for work. Character: '+P.name+', '+P.city+'. Niche: '+P.N.label+'. Voice: '+(P.toneText||P.tone)+'. Look: '+P.look+'. Format: '+w.fmt+'. Current caption: '+w.cap+'\nWrite a clearly different caption (1 to 3 sentences, specific, no hashtags, no AI disclosure'+($("emo").checked?', one fitting emoji':'')+'), 3 hashtags without #, and a self-contained image_prompt that restates the look, then outfit, setting, lighting, and framing. Return only JSON: {"caption":"","hashtags":["3 tags"],"image_prompt":""}';
+sampleFn.json(s).then(function(r){
+w.cap=String(r.caption||w.cap);var t=lst(r.hashtags,4);if(t.length)w.tags=t;if(r.image_prompt)w.prompt=String(r.image_prompt);
+render();save()}).catch(function(){btn.disabled=false;btn.textContent="Try again"})}
+function md(){
+var s="# "+P.name+" ("+P.handle+")\n\nNiche: "+P.N.label+"\nVoice: "+(P.toneText||P.tone)+"\n\n"+P.story+"\n\n## Look\n\n"+P.look+"\n\n## Content plan\n\n";
+week.forEach(function(w){s+="### "+w.day+" ("+w.fmt+")\n\n"+w.cap+"\n\n"+w.tags.map(function(x){return "#"+x}).join(" ")+discText()+"\n\nImage prompt: "+w.prompt+"\n\n"});
+return s}
+var dl=null;
+if(window.claude&&window.claude.use){window.claude.use("downloads").then(function(d){dl=d}).catch(function(){})}
+function exportMd(btn){var t=md();if(dl){dl.save({filename:(P.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"persona")+"-plan.md",data:t}).catch(function(){})}else copy(t,btn)}
+var hn=$("hn");hn.innerHTML='<option value="">All niches</option>'+Object.keys(D.niches).map(function(k){return '<option value="'+k+'">'+esc(D.niches[k].label)+'</option>'}).join("");
+$("hq").addEventListener("input",hrender);hn.addEventListener("change",hrender);
+$("histlist").addEventListener("change",cmpState);$("hcmp").addEventListener("click",cmp);
+hrender();
+$("ai").addEventListener("click",function(){ai(false)});
+$("gen").addEventListener("click",function(){P=build();week=makeWeek();render();save()});
+$("reroll").addEventListener("click",function(){if(P&&P.ai){ai(true);return}if(!P){P=build()}week=makeWeek();render();save()});
+})();
+</script>
+</body>
+</html>
