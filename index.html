@@ -196,7 +196,7 @@ function featureBuilderMarkup(){var h='<div class="card" id="visualCharacterBuil
 
 try{var visualHost=$("visualCharacterBuilderHost");if(visualHost){visualHost.innerHTML=featureBuilderMarkup();visualHost.style.display="block";}}catch(builderError){var visualHost=$("visualCharacterBuilderHost");if(visualHost)visualHost.innerHTML='<div class="card" style="display:block!important"><h3>Visual Character Builder</h3><p>The visual selector panel could not load: '+esc(builderError&&builderError.message||"Unknown error")+'</p></div>';console.error("Visual Character Builder failed:",builderError);}
 function build(){
-var v=D.vibes[$("vibe").value,t=D.tones[$("tone").value],nm=$("name").value.trim();
+var v=D.vibes[$("vibe").value],t=D.tones[$("tone").value],nm=$("name").value.trim();
 var fn=nm||pick(D.first)+" "+pick(D.last);
 var N=D.niches[$("niche").value];
 var p={name:fn,age:24+Math.floor(Math.random()*9),city:pick(D.city),job:pick(N.jobs),hair:pick(D.hair),skin:pick(D.skin),eyes:pick(D.eyes),hobbies:some(N.hobbies,3),drink:pick(D.drink),pillars:some(N.pillars,4),v:v,t:t,tone:$("tone").value,nk:$("niche").value,N:N};
@@ -348,6 +348,36 @@ var ext=blob.type.indexOf("png")>=0?"png":"jpg";$("imgdownload").download="perso
 $("imgstatus").textContent="Image generated. You can preview it, download it, or save this character for reuse.";$("saveGeneratedCharacter").hidden=false;
 try{var hist=JSON.parse(localStorage.getItem("ps_image_history")||"[]");var fr=new FileReader();fr.onload=function(){hist.unshift({data:fr.result,name:P.name,date:Date.now(),prompt:prompt});try{localStorage.setItem("ps_image_history",JSON.stringify(hist.slice(0,4)))}catch(e){localStorage.setItem("ps_image_history",JSON.stringify(hist.slice(0,1)))}renderSavedImages()};fr.readAsDataURL(blob)}catch(e){}
 }).catch(function(err){$("imgstatus").textContent=err.message||"Could not generate the image. Try again."}).then(function(){btn.disabled=false;btn.textContent="Generate image"});
+}
+});
+$("visualCharacterBuilderHost").addEventListener("click",function(e){
+var choice=e.target.closest("button[data-feature-group]");
+if(choice){
+var group=choice.getAttribute("data-feature-group"),value=choice.getAttribute("data-feature-value");
+if(featureSelections[group]===value)delete featureSelections[group];else featureSelections[group]=value;
+$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();
+return;
+}
+var button=e.target.closest("button");
+if(!button)return;
+if(button.id==="clearFeatureChoices"){
+featureSelections={};
+$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();
+return;
+}
+if(button.id==="buildFeaturePrompt"){
+$("featurePrompt").value=featurePromptText();
+return;
+}
+if(button.id==="useFeaturePrompt"){
+var target=$("imgprompt"),prompt=featurePromptText();
+if(target){target.value=(target.value.trim()?target.value.trim()+"\\n\\n":"")+prompt;target.dispatchEvent(new Event("input",{bubbles:true}));}
+$("featurePrompt").value=prompt;
+return;
+}
+if(button.id==="copyFeaturePrompt"){
+var field=$("featurePrompt");field.value=featurePromptText();field.focus();field.select();
+try{document.execCommand("copy");button.textContent="Copied";}catch(copyError){}
 }
 });
 $("out").addEventListener("click",function(e){
