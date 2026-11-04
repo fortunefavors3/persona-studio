@@ -55,6 +55,41 @@ pre{white-space:pre-wrap;word-wrap:break-word;margin:0;font:inherit;background:v
 .image-maker{display:grid;gap:12px}.image-maker label{margin:4px 0 6px}.image-maker textarea{width:100%;min-height:110px;resize:vertical;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}.image-maker .img-actions{display:flex;gap:8px;flex-wrap:wrap}.image-maker .img-actions button{flex:1}.image-maker .preview{display:none;width:100%;max-height:640px;object-fit:contain;background:var(--bg);border:1px solid var(--line);border-radius:10px}.image-maker .warning{font-size:.82rem;color:var(--mute);margin:0}.image-maker a{color:var(--accent);font-weight:500}
 /* Visual Character Builder */
 .builder-intro{color:var(--mute);font-size:.9rem;margin:6px 0 14px}.feature-groups{display:grid;gap:14px}.feature-group{border-top:1px solid var(--line);padding-top:12px}.feature-group h4{margin:0 0 8px;font-size:.98rem}.feature-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.feature-option{padding:7px 5px;border:1px solid var(--line);border-radius:10px;text-align:center;background:var(--bg);min-width:0}.feature-option[aria-pressed=true]{border:2px solid var(--accent);padding:6px 4px}.feature-art{height:58px;border-radius:7px;margin-bottom:5px;display:flex;align-items:center;justify-content:center;font-size:29px;background:linear-gradient(145deg,#f1e5dc,#d8c4b9);overflow:hidden}.feature-option span:last-child{font-size:.76rem;line-height:1.2;display:block}.feature-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.feature-actions button{flex:1}.feature-prompt{width:100%;min-height:105px;margin-top:10px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}.feature-photo{width:100%;height:76px;display:block;object-fit:cover;object-position:center 35%;border-radius:7px;margin-bottom:5px;background:var(--bg)}.feature-option{overflow:hidden}.feature-options{grid-template-columns:repeat(4,minmax(0,1fr))}.feature-option span:last-child{min-height:2em}.feature-group h4{margin-bottom:10px}
+
+/* Dark violet reference-inspired visual redesign */
+:root{color-scheme:dark;--bg:#090b14;--surface:#151727;--ink:#f5f2ff;--mute:#aaa5c3;--line:#34324f;--accent:#8b5cf6;--accent-ink:#fff;--sun:#c4b5fd}
+body{background:radial-gradient(ellipse at 50% -15%,#29204a 0%,#0b0c16 48%,#080a12 100%);color:var(--ink)}
+.wrap{max-width:1500px;padding:22px 18px 48px}
+header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:12px 4px 22px;border-bottom:1px solid #393052;margin-bottom:18px}
+h1{font-size:clamp(2rem,5vw,3.6rem);letter-spacing:-.04em;background:linear-gradient(90deg,#fff,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+header p{margin:5px 0 0;max-width:65ch}
+#visualCharacterBuilderHost>.card{background:linear-gradient(145deg,#201d38,#121522);border:1px solid #6d55ba;box-shadow:0 12px 34px #0007;padding:20px;margin-bottom:18px;border-radius:16px}
+#visualCharacterBuilder .head{padding-bottom:12px;border-bottom:1px solid #393451}
+#visualCharacterBuilder .head h3{font-size:1.45rem}
+.builder-intro{margin:8px 0 18px}
+.feature-groups{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.feature-group{border:1px solid #34334d;background:#101321;border-radius:12px;padding:12px;min-width:0}
+.feature-group h4{font-size:.96rem;color:#f4efff}
+.feature-options{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.feature-option{background:#1b1d2d;border:1px solid #45425e;border-radius:9px;color:#f6f3ff;padding:6px 4px;transition:.15s}
+.feature-option[aria-pressed=true]{border:2px solid #a78bfa;background:#292044;box-shadow:0 0 0 2px #8b5cf633;padding:5px 3px}
+.feature-photo,.feature-art{height:92px;border-radius:7px}
+.feature-option span:last-child{font-size:.76rem;color:#eee9ff}
+.feature-actions button{background:#201c37;border-color:#6b55a8;color:#f5efff}
+.grid{grid-template-columns:minmax(280px,380px) minmax(0,1fr);gap:18px;margin-top:0}
+.panel,.card{background:linear-gradient(145deg,#191b2c,#111420);border:1px solid #393750;border-radius:14px;box-shadow:0 8px 24px #0004}
+.panel{position:static;max-height:none;overflow:visible}
+label{color:#e9e4fa}
+input[type=text],select,.image-maker textarea,.feature-prompt{background:#0e1120;border-color:#45415f;color:#f6f2ff}
+button{background:#201f34;border-color:#48435f;color:#f5f2ff}
+button:hover{border-color:#a78bfa}
+button.main{background:linear-gradient(100deg,#7c3aed,#a855f7);color:#fff;border:0;box-shadow:0 5px 18px #7c3aed55}
+.hero{border-left:4px solid #a78bfa}
+.tags span{background:#211d38;border-color:#484064;color:#ddd3ff}
+pre{background:#0c0f1b;border-color:#38364e;color:#eeeaff}
+@media(max-width:900px){.feature-groups{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.wrap{padding:12px 10px 32px}header{display:block}.feature-groups{grid-template-columns:1fr 1fr}.feature-options{grid-template-columns:repeat(2,minmax(0,1fr))}.feature-photo,.feature-art{height:105px}.panel,.card{padding:14px}}
+
 </style>
 </head>
 <body>
@@ -63,9 +98,9 @@ pre{white-space:pre-wrap;word-wrap:break-word;margin:0;font:inherit;background:v
 <h1>Persona Generator +</h1>
 <p>Create an AI influencer in one tap: a character, a consistent look for your image tool, and a week of captions. Everything here is clearly labeled as AI-generated.</p>
 </header>
+<div id="visualCharacterBuilderHost"></div>
 <div class="grid">
 <div class="panel">
-<div id="visualCharacterBuilderHost"></div>
 <label for="name">Name (optional)</label>
 <input type="text" id="name" placeholder="Leave blank to generate">
 <label for="niche">Niche</label><select id="niche"><option value="lifestyle">Lifestyle</option><option value="fitness">Fitness and wellness</option><option value="combat">Combat sports</option><option value="fashion">Fashion and styling</option><option value="travel">Travel</option><option value="food">Food and cooking</option><option value="tech">Tech and gadgets</option><option value="gaming">Gaming</option></select><label for="plat">Platform</label><select id="plat"><option value="ig">Instagram</option><option value="tt">TikTok</option><option value="yt">YouTube</option></select><label for="tone">Voice</label>
