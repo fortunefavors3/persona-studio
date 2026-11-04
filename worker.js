@@ -45,7 +45,7 @@ export default {
             },
             body: JSON.stringify({
               prompt,
-              image_size: "portrait_4_3",
+              image_size: ({portrait_4_3:"portrait_4_3",portrait_16_9:"portrait_16_9",square:"square",landscape_4_3:"landscape_4_3",landscape_16_9:"landscape_16_9"})[body.aspectRatio] || "portrait_4_3",
               num_inference_steps: 28,
               guidance_scale: 3.5,
               enable_safety_checker: !mature,
