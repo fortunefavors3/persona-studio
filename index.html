@@ -158,7 +158,7 @@ h+='<div class="card"><div class="head"><h3>Look guide</h3><span><button class="
 h+='<div class="card"><div class="head"><h3>'+(week.length>7?"30-day plan":"Week of content")+'</h3><span><button class="small" data-copy="all">Copy all</button> <button class="small" data-copy="export">Export .md</button></span></div>';
 week.forEach(function(w,i){h+='<div class="day"><div class="top"><strong>'+esc(w.day)+'</strong><span class="fmt">'+esc(w.fmt)+'</span></div><p>'+esc(w.cap)+'</p><div class="tags" style="margin:0 0 8px">'+w.tags.map(function(x){return "<span>#"+esc(x)+"</span>"}).join("")+'</div><details><summary class="fmt" style="cursor:pointer">Image prompt</summary><pre style="margin-top:8px">'+esc(w.prompt)+'</pre></details><button class="small" style="margin-top:8px" data-copy="d'+i+'">Copy caption</button>'+(sampleFn?' <button class="small" style="margin-top:8px" data-rw="'+i+'">Rewrite with AI</button>':'')+'</div>'});
 h+='<p class="small-note">Captions are templates. Edit them to fit your voice before posting.</p></div>';
-h+='<div class="card image-maker"><div class="head"><h3>AI image generator</h3><span class="fmt">Powered by Cloudflare Workers AI</span></div>'+
+h+='<div class="card image-maker"><div class="head"><h3>AI image generator</h3><span class="fmt">Powered by fal.ai / Cloudflare fallback</span></div>'+
 '<p class="small-note" style="margin:0">Create an image of this persona using the look guide and a selected post prompt.</p>'+
 '<label for="imgpost">Use a post prompt</label><select id="imgpost">'+week.map(function(w,i){return '<option value="'+i+'">'+esc(w.day)+' · '+esc(w.fmt)+'</option>'}).join('')+'<option value="custom">Write my own prompt</option></select>'+
 '<label for="imgprompt">Image prompt</label><textarea id="imgprompt">'+esc(P.look+' '+(week[0]?week[0].prompt:''))+'</textarea>'+
@@ -180,7 +180,7 @@ if(e.target&&e.target.id==="copyimgprompt"){var ta=$("imgprompt");if(ta)copy(ta.
 if(e.target&&e.target.id==="makeimage"){
 var btn=e.target,prompt=$("imgprompt").value.trim();
 if(!prompt){$("imgstatus").textContent="Enter an image prompt first.";return}
-btn.disabled=true;btn.textContent="Generating…";$("imgstatus").textContent="Generating image with Cloudflare Workers AI…";
+btn.disabled=true;btn.textContent="Generating…";$("imgstatus").textContent="Generating image…";
 fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,mature:!!$("matureMode")&&$("matureMode").checked})}).then(function(res){if(!res.ok)return res.json().catch(function(){return {error:"Image request failed (HTTP "+res.status+")."}}).then(function(data){throw new Error(data.error||"Image request failed (HTTP "+res.status+").")});return res.blob()}).then(function(blob){
 if(!blob.type||blob.type.indexOf("image/")!==0)throw new Error("The service did not return an image.");
 if(imgUrl)URL.revokeObjectURL(imgUrl);imgUrl=URL.createObjectURL(blob);
