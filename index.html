@@ -185,12 +185,14 @@ $("out").addEventListener("change",function(e){
 if(e.target&&e.target.id==="referenceImage"){var file=e.target.files&&e.target.files[0];if(!file)return;if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ $("referenceStatus").textContent="Choose a JPG, PNG, or WebP image.";e.target.value="";return}if(file.size>1800000){$("referenceStatus").textContent="Please choose an image smaller than 1.8 MB.";e.target.value="";return}var reader=new FileReader();reader.onload=function(){try{localStorage.setItem(referenceKey,reader.result);showReference()}catch(err){$("referenceStatus").textContent="Browser storage is full. Remove an older saved item and try again."}};reader.readAsDataURL(file)}
 if(e.target&&e.target.id==="scenePreset"&&e.target.value){$("imgprompt").value=P.look+" "+e.target.value}
 
-if(e.target&&e.target.id==="imgpost"){var v=e.target.value;if(v!=="custom"&&week[+v])$("imgprompt").value=P.look+" "+week[+v].prompt}\nif(e.target&&e.target.id==="aspectRatio"){e.target.setAttribute("data-selected",e.target.value)}
+if(e.target&&e.target.id==="imgpost"){var v=e.target.value;if(v!=="custom"&&week[+v])$("imgprompt").value=P.look+" "+week[+v].prompt}
+if(e.target&&e.target.id==="aspectRatio"){e.target.setAttribute("data-selected",e.target.value)}
 });
 $("out").addEventListener("click",function(e){
 if(e.target&&e.target.id==="clearReference"){try{localStorage.removeItem(referenceKey)}catch(err){}$("referenceImage").value="";showReference();return}
 var savedBtn=e.target.closest("button[data-saved-image]");if(savedBtn){var saved=[];try{saved=JSON.parse(localStorage.getItem("ps_image_history")||"[]")}catch(err){}var si=saved[+savedBtn.getAttribute("data-saved-image")];if(si){$("imgpreview").src=si.data;$("imgpreview").style.display="block";$("imgdownload").href=si.data;$("imgdownload").hidden=false;$("imgdownload").download="persona-studio-saved.jpg";$("imgstatus").textContent="Restored a saved image."}return}
-if(e.target&&e.target.id==="copyimgprompt"){var ta=$("imgprompt");if(ta)copy(ta.value,e.target);return}\nif(e.target&&e.target.hasAttribute("data-old-image")){var old=[];try{old=JSON.parse(localStorage.getItem("ps_image_history")||"[]")}catch(err){}var item=old[+e.target.getAttribute("data-old-image")];if(item){if(imgUrl)URL.revokeObjectURL(imgUrl);imgUrl=item.data;$("imgpreview").src=item.data;$("imgpreview").style.display="block";$("imgdownload").href=item.data;$("imgdownload").hidden=false;$("imgdownload").download="persona-studio-restored.jpg";$("imgstatus").textContent="Restored a previously generated image."}return}
+if(e.target&&e.target.id==="copyimgprompt"){var ta=$("imgprompt");if(ta)copy(ta.value,e.target);return}
+if(e.target&&e.target.hasAttribute("data-old-image")){var old=[];try{old=JSON.parse(localStorage.getItem("ps_image_history")||"[]")}catch(err){}var item=old[+e.target.getAttribute("data-old-image")];if(item){if(imgUrl)URL.revokeObjectURL(imgUrl);imgUrl=item.data;$("imgpreview").src=item.data;$("imgpreview").style.display="block";$("imgdownload").href=item.data;$("imgdownload").hidden=false;$("imgdownload").download="persona-studio-restored.jpg";$("imgstatus").textContent="Restored a previously generated image."}return}
 if(e.target&&e.target.id==="makeimage"){
 var btn=e.target,prompt=$("imgprompt").value.trim();
 if(!prompt){$("imgstatus").textContent="Enter an image prompt first.";return}
