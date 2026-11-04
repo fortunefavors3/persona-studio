@@ -297,7 +297,7 @@ $("hq").addEventListener("input",hrender);hn.addEventListener("change",hrender);
 $("histlist").addEventListener("change",cmpState);$("hcmp").addEventListener("click",cmp);
 hrender();
 $("ai").addEventListener("click",function(){ai(false)});
-$("gen").addEventListener("click",function(){P=build();week=makeWeek();render();save()});
+$("gen").type="button";$("gen").addEventListener("click",function(e){if(e)e.preventDefault();var btn=$("gen");try{btn.disabled=true;setStatus("Building your persona and content plan…");P=build();week=makeWeek();if(!P||!week||!week.length)throw new Error("The template did not return a persona or content plan.");render();save();setStatus("Your template persona is ready.");}catch(err){console.error("Quick Template Persona error:",err);setStatus("The template could not be generated: "+(err&&err.message?err.message:"Unknown error")+". Please try again.");}finally{btn.disabled=false;}});
 $("reroll").addEventListener("click",function(){if(P&&P.ai){ai(true);return}if(!P){P=build()}week=makeWeek();render();save()});
 })();
 </script>
