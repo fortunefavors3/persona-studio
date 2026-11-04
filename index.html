@@ -52,7 +52,7 @@ pre{white-space:pre-wrap;word-wrap:break-word;margin:0;font:inherit;background:v
 .hi{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:.88rem}
 .cmp{display:grid;gap:16px}@media(min-width:560px){.cmp{grid-template-columns:1fr 1fr}}
 .cc b{font-size:.85rem;color:var(--mute);font-weight:500}.cc p{margin:2px 0 10px}
-</style>
+.image-maker{display:grid;gap:12px}.image-maker label{margin:4px 0 6px}.image-maker textarea{width:100%;min-height:110px;resize:vertical;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}.image-maker .img-actions{display:flex;gap:8px;flex-wrap:wrap}.image-maker .img-actions button{flex:1}.image-maker .preview{display:none;width:100%;max-height:640px;object-fit:contain;background:var(--bg);border:1px solid var(--line);border-radius:10px}.image-maker .warning{font-size:.82rem;color:var(--mute);margin:0}.image-maker a{color:var(--accent);font-weight:500}</style>
 </head>
 <body>
 <div class="wrap">
@@ -158,11 +158,41 @@ h+='<div class="card"><div class="head"><h3>Look guide</h3><span><button class="
 h+='<div class="card"><div class="head"><h3>'+(week.length>7?"30-day plan":"Week of content")+'</h3><span><button class="small" data-copy="all">Copy all</button> <button class="small" data-copy="export">Export .md</button></span></div>';
 week.forEach(function(w,i){h+='<div class="day"><div class="top"><strong>'+esc(w.day)+'</strong><span class="fmt">'+esc(w.fmt)+'</span></div><p>'+esc(w.cap)+'</p><div class="tags" style="margin:0 0 8px">'+w.tags.map(function(x){return "<span>#"+esc(x)+"</span>"}).join("")+'</div><details><summary class="fmt" style="cursor:pointer">Image prompt</summary><pre style="margin-top:8px">'+esc(w.prompt)+'</pre></details><button class="small" style="margin-top:8px" data-copy="d'+i+'">Copy caption</button>'+(sampleFn?' <button class="small" style="margin-top:8px" data-rw="'+i+'">Rewrite with AI</button>':'')+'</div>'});
 h+='<p class="small-note">Captions are templates. Edit them to fit your voice before posting.</p></div>';
+h+='<div class="card image-maker"><div class="head"><h3>AI image generator</h3><span class="fmt">Powered by Pollinations</span></div>'+
+'<p class="small-note" style="margin:0">Create an image of this persona using the look guide and a selected post prompt.</p>'+
+'<label for="imgpost">Use a post prompt</label><select id="imgpost">'+week.map(function(w,i){return '<option value="'+i+'">'+esc(w.day)+' · '+esc(w.fmt)+'</option>'}).join('')+'<option value="custom">Write my own prompt</option></select>'+
+'<label for="imgprompt">Image prompt</label><textarea id="imgprompt">'+esc(P.look+' '+(week[0]?week[0].prompt:''))+'</textarea>'+
+'<label for="imgmodel">Image model</label><select id="imgmodel"><option value="black-forest-labs/flux.1-schnell">FLUX.1 Schnell · fast</option><option value="black-forest-labs/flux.2-pro">FLUX.2 Pro</option><option value="google/gemini-3.1-flash-image">Gemini 3.1 Flash Image</option><option value="openai/gpt-image-1.5">GPT Image 1.5</option></select>'+
+'<label for="imgkey">Pollinations API key</label><input id="imgkey" type="password" autocomplete="off" placeholder="Paste your API key (sk_...)">'+
+'<p class="warning">Get a key at <a href="https://enter.pollinations.ai/keys" target="_blank" rel="noopener">enter.pollinations.ai</a>. Generation may use paid Pollen. Your key is used only for this request and is not saved by Persona Studio. This browser-based setup exposes the key to anyone with access to this device; use a limited-budget key.</p>'+
+'<div class="img-actions"><button class="main" type="button" id="makeimage" style="margin:0">Generate image</button><button type="button" class="small" id="copyimgprompt">Copy prompt</button></div>'+
+'<p class="small-note" id="imgstatus" role="status" aria-live="polite"></p><img id="imgpreview" class="preview" alt="Generated AI persona image"><a id="imgdownload" hidden download="persona-studio-image.jpg">Download generated image</a></div>';
 $("out").innerHTML=h}
 function copy(txt,btn){
 var done=function(){var o=btn.textContent;btn.textContent="Copied";setTimeout(function(){btn.textContent=o},1400)};
 try{navigator.clipboard.writeText(txt).then(done,function(){fallback()})}catch(e){fallback()}
 function fallback(){var a=document.createElement("textarea");a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){}document.body.removeChild(a)}}
+var imgUrl=null;
+$("out").addEventListener("change",function(e){
+if(e.target&&e.target.id==="imgpost"){var v=e.target.value;if(v!=="custom"&&week[+v])$("imgprompt").value=P.look+" "+week[+v].prompt}
+});
+$("out").addEventListener("click",function(e){
+if(e.target&&e.target.id==="copyimgprompt"){var ta=$("imgprompt");if(ta)copy(ta.value,e.target);return}
+if(e.target&&e.target.id==="makeimage"){
+var btn=e.target,key=$("imgkey").value.trim(),prompt=$("imgprompt").value.trim(),model=$("imgmodel").value;
+if(!key){$("imgstatus").textContent="Paste your Pollinations API key first.";return}
+if(!prompt){$("imgstatus").textContent="Enter an image prompt first.";return}
+btn.disabled=true;btn.textContent="Generating…";$("imgstatus").textContent="Generating image. This may take a minute…";
+var url="https://gen.pollinations.ai/image/"+encodeURIComponent(prompt)+"?model="+encodeURIComponent(model)+"&width=1024&height=1024";
+fetch(url,{headers:{Authorization:"Bearer "+key}}).then(function(res){if(!res.ok)throw new Error(res.status===401?"API key was rejected. Check the key.":res.status===402?"Your Pollinations balance or key budget is exhausted.":"Image request failed (HTTP "+res.status+").");return res.blob()}).then(function(blob){
+if(!blob.type||blob.type.indexOf("image/")!==0)throw new Error("The service did not return an image.");
+if(imgUrl)URL.revokeObjectURL(imgUrl);imgUrl=URL.createObjectURL(blob);
+$("imgpreview").src=imgUrl;$("imgpreview").style.display="block";$("imgdownload").href=imgUrl;$("imgdownload").hidden=false;
+var ext=blob.type.indexOf("png")>=0?"png":"jpg";$("imgdownload").download="persona-"+P.name.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"."+ext;
+$("imgstatus").textContent="Image generated. You can preview it or download it.";
+}).catch(function(err){$("imgstatus").textContent=err.message||"Could not generate the image. Try again."}).then(function(){btn.disabled=false;btn.textContent="Generate image"});
+}
+});
 $("out").addEventListener("click",function(e){
 var rw=e.target.closest("button[data-rw]");if(rw&&P&&sampleFn){rewrite(+rw.getAttribute("data-rw"),rw);return}
 var ex=e.target.closest("button[data-copy=export]");if(ex&&P){exportMd(ex);return}
