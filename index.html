@@ -301,7 +301,6 @@ $("gen").type="button";$("gen").addEventListener("click",function(e){if(e)e.prev
 $("reroll").addEventListener("click",function(){if(P&&P.ai){ai(true);return}if(!P){P=build()}week=makeWeek();render();save()});
 })();
 
-<script>
 (function(){
 document.addEventListener("click",function(event){
 var button=event.target&&event.target.closest?event.target.closest("#gen"):null;if(!button)return;
@@ -326,7 +325,6 @@ output.innerHTML=html;if(status)status.textContent="Your template persona is rea
 }catch(error){if(status)status.textContent="Generator error: "+(error&&error.message?error.message:"Please refresh and try again.")}finally{button.disabled=false}
 },true);
 })();
-</script>
 </script>
 </body>
 </html>
