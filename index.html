@@ -71,6 +71,7 @@ pre{white-space:pre-wrap;word-wrap:break-word;margin:0;font:inherit;background:v
 <label for="freq">Posts per week</label><select id="freq"><option value="3">3</option><option value="5">5</option><option value="7" selected>7</option></select><label for="len">Plan length</label><select id="len"><option value="7">1 week</option><option value="30">30 days</option></select><div class="row"><input type="checkbox" id="emo"><label for="emo" style="margin:0;font-weight:400">Add an emoji to captions</label></div><div class="row"><input type="checkbox" id="disc"><label for="disc" style="margin:0;font-weight:400">Add AI disclosure to captions</label></div>
 <label for="dir">Extra direction (optional)</label><input type="text" id="dir" placeholder="e.g. Brazilian, loves surfing, dry humor"><button class="main" id="ai" hidden>Generate with AI</button><button class="main" id="gen" style="background:var(--surface);color:var(--ink);border-color:var(--line);margin-top:10px">Quick template persona</button>
 <button class="small" id="reroll" style="margin-top:10px;width:100%">New week, same persona</button><p class="small-note" id="status" role="status"></p><details id="hist" hidden style="margin-top:12px"><summary class="fmt" style="cursor:pointer">History</summary><input type="text" id="hq" placeholder="Search name or city" style="margin:8px 0"><select id="hn" aria-label="Filter by niche"></select><div id="histlist"></div><button class="small" id="hcmp" style="margin-top:8px" disabled>Compare 2 selected</button></details>
+<details id="characterLibrary" style="margin-top:14px"><summary class="fmt" style="cursor:pointer">Saved Characters Library</summary><p class="small-note">Characters saved on this device. Load, edit their prompt description, rename, or delete them.</p><input type="text" id="characterSearch" placeholder="Search saved characters"><div id="characterLibraryList"></div></details>
 </div>
 <div class="out" id="out" aria-live="polite">
 <div class="card"><p style="margin:0;color:var(--mute)">Choose a voice and aesthetic, then tap Generate persona.</p></div>
@@ -203,11 +204,41 @@ return item.description;
 });
 return {prompt:expanded,missing:missing};
 }
+function renderCharacterLibrary(){
+var box=$("characterLibraryList");if(!box)return;
+var all=getSavedCharacters(),q=String($("characterSearch")&&$("characterSearch").value||"").toLowerCase();
+var items=Object.keys(all).map(function(k){return all[k]}).filter(function(x){return (x.name+" "+x.slug).toLowerCase().indexOf(q)>-1});
+if(!items.length){box.innerHTML='<p class="small-note">'+(Object.keys(all).length?'No matching saved characters.':'No saved characters yet. Generate a persona and tap Save this character.')+'</p>';return}
+box.innerHTML=items.map(function(x){
+return '<div class="card" style="padding:12px;margin-top:10px"><b>'+esc(x.name)+'</b><p class="small-note" style="margin:2px 0 8px">{{'+esc(x.slug)+'}}</p><label for="charDesc_'+esc(x.slug)+'">Prompt description</label><textarea id="charDesc_'+esc(x.slug)+'" data-char-desc="'+esc(x.slug)+'" style="width:100%;min-height:105px;resize:vertical;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px">'+esc(x.description)+'</textarea><label for="charName_'+esc(x.slug)+'">Character name</label><input type="text" id="charName_'+esc(x.slug)+'" data-char-name="'+esc(x.slug)+'" value="'+esc(x.name)+'"><div class="img-actions" style="margin-top:10px"><button type="button" class="small" data-char-action="load" data-char-key="'+esc(x.slug)+'">Load</button><button type="button" class="small" data-char-action="save" data-char-key="'+esc(x.slug)+'">Save edits</button><button type="button" class="small" data-char-action="delete" data-char-key="'+esc(x.slug)+'">Delete</button></div></div>'
+}).join("");
+}
+function handleCharacterLibraryAction(action,key){
+var all=getSavedCharacters(),item=all[key];if(!item)return;
+if(action==="delete"){if(!confirm("Delete "+item.name+" from this device?"))return;delete all[key];localStorage.setItem(savedCharactersKey,JSON.stringify(all));renderCharacterLibrary();return}
+if(action==="load"){
+var p=item.persona||{};P={};Object.keys(p).forEach(function(k){if(k!=="nicheLabel")P[k]=p[k]});
+P.N=D.niches[P.nk]||D.niches.lifestyle;P.v=P.v||D.vibes.cozy;P.t=P.t||D.tones.warm;P.name=item.name;
+$("name").value=P.name;$("niche").value=P.nk||"lifestyle";$("tone").value=P.tone||"warm";
+$("vibe").value=Object.keys(D.vibes).filter(function(k){return D.vibes[k].pal===P.v.pal})[0]||"cozy";
+week=makeWeek();render();save();$("status").textContent="Loaded "+P.name+" from your character library.";window.scrollTo(0,0);return
+}
+if(action==="save"){
+var nameInput=document.querySelector('[data-char-name="'+key+'"]'),descInput=document.querySelector('[data-char-desc="'+key+'"]');
+var newName=(nameInput&&nameInput.value.trim())||item.name,slug=characterSlug(newName),description=descInput?descInput.value.trim():item.description;
+if(!description){$("status").textContent="The character description cannot be empty.";return}
+if(slug!==key&&all[slug]){$("status").textContent="Another saved character already uses {{"+slug+"}}.";return}
+delete all[key];item.name=newName;item.slug=slug;item.description=description;
+if(item.persona){item.persona.name=newName;item.persona.handle="@"+slug.replace(/\./g,"").slice(0,18)}
+all[slug]=item;localStorage.setItem(savedCharactersKey,JSON.stringify(all));renderCharacterLibrary();$("status").textContent="Saved changes for "+newName+". Use {{"+slug+"}} in prompts.";
+}
+}
 var referenceKey="ps_character_reference_v1";
 function getReference(){try{return localStorage.getItem(referenceKey)||""}catch(e){return ""}}
 function showReference(){var data=getReference(),im=$("referencePreview"),st=$("referenceStatus");if(im){if(data){im.src=data;im.style.display="block";if(st)st.textContent="Reference photo saved in this browser."}else{im.removeAttribute("src");im.style.display="none";if(st)st.textContent="Optional: upload a clear image of your fictional character. Stored only in this browser."}}}
 function renderSavedImages(){var box=$("imageHistory");if(!box)return;var a=[];try{a=JSON.parse(localStorage.getItem("ps_image_history")||"[]")}catch(e){}box.innerHTML=a.length?"<b>Recent images</b><div style='display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px'>"+a.map(function(x,i){return "<button type='button' class='small' data-saved-image='"+i+"' style='padding:3px'><img src='"+x.data+"' alt='Saved image' style='width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px'></button>"}).join("")+"</div>":"No saved images yet."}
-showReference();renderSavedImages();
+showReference();renderSavedImages();renderCharacterLibrary();
+$("characterSearch").addEventListener("input",renderCharacterLibrary);
 $("out").addEventListener("change",function(e){
 if(e.target&&e.target.id==="referenceImage"){var file=e.target.files&&e.target.files[0];if(!file)return;if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ $("referenceStatus").textContent="Choose a JPG, PNG, or WebP image.";e.target.value="";return}if(file.size>1800000){$("referenceStatus").textContent="Please choose an image smaller than 1.8 MB.";e.target.value="";return}var reader=new FileReader();reader.onload=function(){try{localStorage.setItem(referenceKey,reader.result);showReference()}catch(err){$("referenceStatus").textContent="Browser storage is full. Remove an older saved item and try again."}};reader.readAsDataURL(file)}
 if(e.target&&e.target.id==="scenePreset"&&e.target.value){$("imgprompt").value=P.look+" "+e.target.value}
@@ -218,7 +249,9 @@ if(e.target&&e.target.id==="aspectRatio"){e.target.setAttribute("data-selected",
 $("out").addEventListener("click",function(e){
 if(e.target&&e.target.id==="clearReference"){try{localStorage.removeItem(referenceKey)}catch(err){}$("referenceImage").value="";showReference();return}
 var savedBtn=e.target.closest("button[data-saved-image]");if(savedBtn){var saved=[];try{saved=JSON.parse(localStorage.getItem("ps_image_history")||"[]")}catch(err){}var si=saved[+savedBtn.getAttribute("data-saved-image")];if(si){$("imgpreview").src=si.data;$("imgpreview").style.display="block";$("imgdownload").href=si.data;$("imgdownload").hidden=false;$("imgdownload").download="persona-studio-saved.jpg";$("imgstatus").textContent="Restored a saved image."}return}
-if(e.target&&e.target.id==="saveCharacter"){saveCurrentCharacter();return}
+if(e.target&&e.target.id==="saveCharacter"){saveCurrentCharacter();renderCharacterLibrary();return}
+var libraryButton=e.target.closest("button[data-char-action]");
+if(libraryButton){handleCharacterLibraryAction(libraryButton.getAttribute("data-char-action"),libraryButton.getAttribute("data-char-key"));return}
 if(e.target&&e.target.id==="copyimgprompt"){var ta=$("imgprompt");if(ta)copy(ta.value,e.target);return}
 if(e.target&&e.target.hasAttribute("data-old-image")){var old=[];try{old=JSON.parse(localStorage.getItem("ps_image_history")||"[]")}catch(err){}var item=old[+e.target.getAttribute("data-old-image")];if(item){if(imgUrl)URL.revokeObjectURL(imgUrl);imgUrl=item.data;$("imgpreview").src=item.data;$("imgpreview").style.display="block";$("imgdownload").href=item.data;$("imgdownload").hidden=false;$("imgdownload").download="persona-studio-restored.jpg";$("imgstatus").textContent="Restored a previously generated image."}return}
 if(e.target&&e.target.id==="makeimage"){
