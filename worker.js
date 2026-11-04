@@ -50,7 +50,7 @@ export default {
     if (url.pathname === "/api/xavira/status" && request.method === "GET") {
       if (!env.XAVIRA_API_KEY) return json({ error: "Xavira is not configured. Add the XAVIRA_API_KEY secret to your Cloudflare Worker." }, 503);
       const id = url.searchParams.get("id") || "";
-      if (!/^[0-9a-f-]{36}$/i.test(id)) return json({ error: "Invalid generation ID." }, 400);
+      if (!/^[a-zA-Z0-9_-]{8,200}$/.test(id)) return json({ error: "Invalid generation ID." }, 400);
       try {
         const response = await fetch("https://api.xavira.ai/v1/generations/" + id, {
           headers: { "Authorization": "Bearer " + env.XAVIRA_API_KEY }
@@ -62,7 +62,7 @@ export default {
           return json({ status: data.status || "pending" }, 202);
         }
         const output = new URL(data.output_url);
-        if (output.protocol !== "https:" || output.hostname !== "pub-202d3c54d6e442d592b80751c50c9c78.r2.dev") return json({ error: "Xavira returned an unexpected image host." }, 502);
+        if (output.protocol !== "https:") return json({ error: "Xavira returned an unexpected image URL." }, 502);
         const image = await fetch(output.toString());
         if (!image.ok) return json({ error: "Could not retrieve the generated image." }, 502);
         return new Response(image.body, { headers: { ...headers, "Content-Type": image.headers.get("Content-Type") || "image/png" } });
@@ -84,7 +84,7 @@ export default {
           if (!env.XAVIRA_API_KEY) return json({ error: "Mature mode needs Xavira. Add the XAVIRA_API_KEY secret in Cloudflare and redeploy." }, 503);
           if (referenceImage) return json({ error: "Xavira reference-image use is separately gated and requires its approval process. This generation will use the saved text-based character identity instead; turn off Use reference image and try again." }, 400);
           const characterId = typeof body.characterId === "string" ? body.characterId : "";
-          if (!/^[0-9a-f-]{36}$/i.test(characterId)) return json({ error: "Create or select this persona's Xavira character first, then try again." }, 400);
+          if (!/^[a-zA-Z0-9_-]{8,200}$/.test(characterId)) return json({ error: "Create or select this persona's Xavira character first, then try again." }, 400);
           const idem = typeof body.idempotencyKey === "string" && /^[a-zA-Z0-9_-]{12,100}$/.test(body.idempotencyKey) ? body.idempotencyKey : crypto.randomUUID();
           const response = await fetch("https://api.xavira.ai/v1/images:generate", {
             method: "POST",
