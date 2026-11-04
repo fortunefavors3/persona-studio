@@ -300,6 +300,33 @@ $("ai").addEventListener("click",function(){ai(false)});
 $("gen").type="button";$("gen").addEventListener("click",function(e){if(e)e.preventDefault();var btn=$("gen"),status=$("status");try{btn.disabled=true;if(status)status.textContent="Building your persona and content plan…";P=build();week=makeWeek();if(!P||!week||!week.length)throw new Error("The template did not return a persona or content plan.");render();save();if(status)status.textContent="Your template persona is ready.";}catch(err){console.error("Quick Template Persona error:",err);if(status)status.textContent="The template could not be generated: "+(err&&err.message?err.message:"Unknown error")+". Please try again.";}finally{btn.disabled=false;}});
 $("reroll").addEventListener("click",function(){if(P&&P.ai){ai(true);return}if(!P){P=build()}week=makeWeek();render();save()});
 })();
+
+<script>
+(function(){
+document.addEventListener("click",function(event){
+var button=event.target&&event.target.closest?event.target.closest("#gen"):null;if(!button)return;
+event.preventDefault();event.stopImmediatePropagation();
+var status=document.getElementById("status"),output=document.getElementById("out");
+function val(id,def){var e=document.getElementById(id);return e&&e.value?e.value:def}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function esc(v){return String(v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+try{
+button.disabled=true;if(status)status.textContent="Creating your persona and content plan…";
+var name=val("name","").trim()||pick(["Maya","Tessa","Noor","Iris","Luna","Jade"])+" "+pick(["Hart","Reyes","Bell","Nair","Duarte"]);
+var niche=val("niche","lifestyle"),names={lifestyle:"Lifestyle",fitness:"Fitness and wellness",combat:"Combat sports",fashion:"Fashion and styling",travel:"Travel",food:"Food and cooking",tech:"Tech and gadgets",gaming:"Gaming"};
+var city=pick(["Lisbon","Austin","Melbourne","Vancouver","Copenhagen","Seoul","Portland","Barcelona"]),age=24+Math.floor(Math.random()*9);
+var look="Adult fictional woman, age "+age+", "+pick(["long wavy chestnut hair","a sleek dark bob","curly auburn hair","long black hair with loose waves"])+", natural skin texture and expressive eyes.";
+var pillars=({fitness:["Strength basics","Mobility","Recovery","Beginner wins"],combat:["Fight-camp diaries","Technique","Recovery","Gym culture"],fashion:["Outfit formulas","Thrift finds","Capsule wardrobe","Personal style"],travel:["Weekend itineraries","Budget tips","Packing lists","Hidden spots"],food:["Weeknight dinners","Baking","Budget meals","Market hauls"],tech:["Gadget reviews","Desk setups","App picks","Tech explained"],gaming:["Game nights","Setup tours","Reviews","Community"],lifestyle:["Morning routines","Outfit ideas","Home and plants","Local cafes"]})[niche]||["Daily routines","Ideas","Behind the scenes","Community"];
+var days=[["Monday","A fresh start in "+city+": one small routine that makes the day better."],["Tuesday","A practical tip from my niche that I wish I had learned sooner."],["Wednesday","A behind-the-scenes look at what I am working on this week."],["Thursday","A quick Q&A: what would you like me to cover next?"],["Friday","Three things I am loving this week, and one I would skip."],["Saturday","Out and about in "+city+": a little inspiration for your weekend."],["Sunday","A simple reset and one goal for the week ahead."]];
+var count=Number(val("freq","7")),total=val("len","7")==="30"?30:7,selected=count===3?[0,2,4]:count===5?[0,1,2,4,5]:[0,1,2,3,4,5,6],week=[];
+for(var i=0;i<total;i++){if(selected.indexOf(i%7)<0)continue;week.push({day:total===30?"Day "+(i+1)+" · "+days[i%7][0]:days[i%7][0],caption:days[i%7][1],prompt:look+" Outfit and setting suited to "+val("vibe","cozy")+" aesthetic, natural light, candid editorial framing."})}
+var html='<div class="card hero"><h2>'+esc(name)+'</h2><p class="meta">@'+esc(name.toLowerCase().replace(/[^a-z0-9]+/g,""))+' · '+age+' · '+esc(city)+' · '+esc(names[niche]||"Lifestyle")+'</p><p>A fictional AI-generated creator with a practical content plan.</p><div class="tags">'+pillars.map(function(p){return "<span>"+esc(p)+"</span>"}).join("")+'</div></div><div class="card"><h3>Look guide</h3><pre>'+esc(look)+'</pre></div><div class="card"><h3>Content plan</h3>';
+week.forEach(function(w){html+='<div class="day"><strong>'+esc(w.day)+'</strong><p>'+esc(w.caption)+'</p><details><summary>Image prompt</summary><pre>'+esc(w.prompt)+'</pre></details></div>'});html+='</div>';
+output.innerHTML=html;if(status)status.textContent="Your template persona is ready.";
+}catch(error){if(status)status.textContent="Generator error: "+(error&&error.message?error.message:"Please refresh and try again.")}finally{button.disabled=false}
+},true);
+})();
+</script>
 </script>
 </body>
 </html>
