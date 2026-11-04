@@ -27,6 +27,11 @@ export default {
 
       const prompt = typeof body.prompt === "string" ? body.prompt.trim() : "";
       const mature = body.mature === true;
+      const referenceImage = typeof body.referenceImage === "string" ? body.referenceImage : "";
+      const seed = Number.isInteger(body.seed) && body.seed >= 0 && body.seed <= 2147483647 ? body.seed : null;
+      if (referenceImage && (!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(referenceImage) || referenceImage.length > 2500000)) {
+        return Response.json({ error: "Reference image must be a JPG, PNG, or WebP smaller than about 1.8 MB." }, { status: 400 });
+      }
       if (!prompt || prompt.length > 2048) {
         return Response.json({ error: "Enter a prompt between 1 and 2,048 characters." }, { status: 400 });
       }
@@ -37,7 +42,7 @@ export default {
             return Response.json({ error: "Mature mode is unavailable until fal.ai authorizes disabling the safety checker for your account." }, { status: 403 });
           }
 
-          const falResponse = await fetch("https://fal.run/fal-ai/flux-2-flex", {
+          const falResponse = await fetch(referenceImage ? "https://fal.run/fal-ai/flux-2-flex/edit" : "https://fal.run/fal-ai/flux-2-flex", {
             method: "POST",
             headers: {
               "Authorization": "Key " + env.FAL_KEY,
@@ -49,7 +54,9 @@ export default {
               num_inference_steps: 28,
               guidance_scale: 3.5,
               enable_safety_checker: !mature,
-              output_format: "jpeg"
+              output_format: "jpeg",
+              ...(referenceImage ? { image_urls: [referenceImage] } : {}),
+              ...(seed !== null ? { seed } : {})
             })
           });
 
@@ -73,6 +80,9 @@ export default {
           });
         }
 
+        if (referenceImage) {
+          return Response.json({ error: "Character reference editing requires the fal.ai connection. Check that FAL_KEY is configured." }, { status: 503 });
+        }
         if (mature) {
           return Response.json({ error: "Mature mode requires a configured fal.ai API key. Add FAL_KEY in Cloudflare Worker secrets." }, { status: 503 });
         }
