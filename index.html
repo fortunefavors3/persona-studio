@@ -170,7 +170,7 @@ return seq.map(function(q){var i=q%7;var d=[(L?"Day "+(q+1)+" · ":"")+D.days[i]
 var cap=d[2].replace(/\{city\}/g,P.city).replace(/\{drink\}/g,P.drink).replace(/\{hobby\}/g,pick(P.hobbies));
 var text=pick(P.t.open)+" "+cap+" "+pick(P.t.close);
 var outfit=pick(P.N.wear||P.v.wear),set=pick(P.N.set||P.v.set);
-var prompt="Photo of the same character: adult woman, "+P.hair+", "+P.skin+", "+P.eyes+", wearing "+outfit+", in "+set+", "+P.v.light+", color palette "+P.v.pal+", natural candid framing, 35mm lens, realistic skin texture, consistent face across images";
+var prompt="Photo of the same character: adult woman, "+P.hair+", "+P.skin+", "+P.eyes+", wearing "+outfit+", in "+set+", "+P.v.light+", color palette "+P.v.pal+"."+featureLookText()+" natural candid framing, 35mm lens, realistic skin texture, consistent face across images";
 return {day:d[0],fmt:PF[$("plat").value][d[1]]||d[1],cap:text+($("emo").checked?" "+pick(P.N.emo):""),prompt:prompt,tags:some(P.tags,3)}})}
 function discText(){return $("disc").checked?"\n\nAI-generated character. #AIgenerated":""}
 function capFull(w){return w.cap+"\n\n"+w.tags.map(function(x){return "#"+x}).join(" ")+discText()}
