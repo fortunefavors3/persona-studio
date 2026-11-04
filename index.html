@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Look Here Sin</title>
+<title>Persona Generator +</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=DM+Sans:wght@400;500&display=swap">
 <style>
 :root{--bg:#f3f0f7;--surface:#fff;--ink:#231f33;--mute:#6b6580;--line:#ddd7ea;--accent:#6c4df6;--accent-ink:#fff;--sun:#f2b134;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -60,7 +60,7 @@ pre{white-space:pre-wrap;word-wrap:break-word;margin:0;font:inherit;background:v
 <body>
 <div class="wrap">
 <header>
-<h1>Look Here Sin</h1>
+<h1>Persona Generator +</h1>
 <p>Create an AI influencer in one tap: a character, a consistent look for your image tool, and a week of captions. Everything here is clearly labeled as AI-generated.</p>
 </header>
 <div class="grid">
@@ -192,7 +192,7 @@ h+=featureBuilderMarkup();h+='<div class="card image-maker"><div class="head"><h
 '<label for="imgstyle">Visual finish</label><select id="imgstyle"><option value="">No extra style</option><option value="photorealistic, natural skin texture, realistic camera detail">Photorealistic</option><option value="cinematic lighting, film still composition, rich atmosphere">Cinematic</option><option value="editorial fashion photography, polished magazine composition">Fashion editorial</option><option value="soft natural light, warm colors, candid lifestyle photography">Lifestyle photography</option><option value="clean studio lighting, crisp commercial product photography">Studio photography</option></select>'+
 '<div class="row"><input type="checkbox" id="matureMode"><label for="matureMode" style="margin:0;font-weight:400">Mature Content Mode (18+)</label></div><p class="warning">When selected, image generation uses Xavira with its moderation rules. Confirm you are 18 or older. Never use this for minors, non-consensual imagery, or real people without documented consent. Xavira reference-photo uploads are not sent in 18+ mode; its reference feature requires separate approval.</p><p class="small-note" id="providerStatus">Checking image providers…</p>'+
 '<div class="img-actions"><button class="main" type="button" id="makeimage" style="margin:0">Generate image</button><button type="button" class="small" id="copyimgprompt">Copy prompt</button></div>'+
-'<p class="small-note" id="imgstatus" role="status" aria-live="polite"></p><img id="imgpreview" class="preview" alt="Generated AI persona image"><a id="imgdownload" hidden download="persona-studio-image.jpg">Download generated image</a><div id="imageHistory" class="small-note"></div></div>';
+'<p class="small-note" id="imgstatus" role="status" aria-live="polite"></p><img id="imgpreview" class="preview" alt="Generated AI persona image"><div class="img-actions"><button type="button" class="small" id="saveGeneratedCharacter" hidden>Save this character</button></div><a id="imgdownload" hidden download="persona-studio-image.jpg">Download generated image</a><div id="imageHistory" class="small-note"></div></div>';
 $("out").innerHTML=h}
 function copy(txt,btn){
 var done=function(){var o=btn.textContent;btn.textContent="Copied";setTimeout(function(){btn.textContent=o},1400)};
@@ -203,7 +203,7 @@ var imgUrl=null;
 var savedCharactersKey="ps_saved_characters_v1";
 function characterSlug(name){return String(name||"character").toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,".").replace(/^\.|\.$/g,"")||"character"}
 function characterDescription(p){
-return "Saved fictional character: "+p.name+". Adult age: "+p.age+". Appearance and signature look: "+p.look+". Persona and background: "+(p.story||"")+" Voice: "+(p.toneText||p.tone||"")+" Niche: "+(p.N&&p.N.label||p.nk||"")+" Style details and content themes: "+(p.pillars||[]).join(", ")+". Favorite things: "+(p.hobbies||[]).join(", ")+". Keep the same identity, facial features, hair, eyes, skin tone, proportions, and signature aesthetic in every image.";
+var selected=typeof featurePromptText==="function"?featurePromptText():"";return "Saved fictional character: "+p.name+". Adult age: "+p.age+". Appearance and signature look: "+p.look+". Selected visual features: "+selected+". Persona and background: "+(p.story||"")+" Voice: "+(p.toneText||p.tone||"")+" Niche: "+(p.N&&p.N.label||p.nk||"")+" Style details and content themes: "+(p.pillars||[]).join(", ")+". Favorite things: "+(p.hobbies||[]).join(", ")+". Keep the same identity, facial features, hair, eyes, skin tone, proportions, and signature aesthetic in every image.";
 }
 function getSavedCharacters(){try{return JSON.parse(localStorage.getItem(savedCharactersKey)||"{}")}catch(e){return {}}}
 function saveCurrentCharacter(){
@@ -211,7 +211,7 @@ if(!P)return;
 var slug=characterSlug(P.name),all=getSavedCharacters(),copyP={};
 Object.keys(P).forEach(function(k){if(k!=="N")copyP[k]=P[k]});
 copyP.nicheLabel=P.N&&P.N.label||"";
-all[slug]={name:P.name,slug:slug,description:characterDescription(P),persona:copyP,updated:Date.now()};
+all[slug]={name:P.name,slug:slug,description:characterDescription(P),persona:copyP,visualFeatures:typeof featureSelections!=="undefined"?JSON.parse(JSON.stringify(featureSelections)):{},imagePrompt:$("imgprompt")?$("imgprompt").value:"",updated:Date.now()};
 try{localStorage.setItem(savedCharactersKey,JSON.stringify(all));var help=$("characterTokenHelp");if(help)help.textContent="Saved! Use {{"+slug+"}} in any image prompt.";var st=$("imgstatus");if(st)st.textContent="Saved "+P.name+" as {{"+slug+"}}. The character is stored in this browser."}
 catch(e){var help=$("characterTokenHelp");if(help)help.textContent="Browser storage is full; the character could not be saved."}
 }
@@ -280,6 +280,7 @@ if(e.target&&e.target.id==="copyFeaturePrompt"){copy($("featurePrompt").value||f
 if(e.target&&e.target.id==="clearReference"){try{localStorage.removeItem(referenceKey)}catch(err){}$("referenceImage").value="";showReference();return}
 var savedBtn=e.target.closest("button[data-saved-image]");if(savedBtn){var saved=[];try{saved=JSON.parse(localStorage.getItem("ps_image_history")||"[]")}catch(err){}var si=saved[+savedBtn.getAttribute("data-saved-image")];if(si){$("imgpreview").src=si.data;$("imgpreview").style.display="block";$("imgdownload").href=si.data;$("imgdownload").hidden=false;$("imgdownload").download="persona-studio-saved.jpg";$("imgstatus").textContent="Restored a saved image."}return}
 if(e.target&&e.target.id==="saveCharacter"){saveCurrentCharacter();renderCharacterLibrary();return}
+if(e.target&&e.target.id==="saveGeneratedCharacter"){saveCurrentCharacter();renderCharacterLibrary();e.target.textContent="Character saved ✓";return}
 var libraryButton=e.target.closest("button[data-char-action]");
 if(libraryButton){handleCharacterLibraryAction(libraryButton.getAttribute("data-char-action"),libraryButton.getAttribute("data-char-key"));return}
 if(e.target&&e.target.id==="copyimgprompt"){var ta=$("imgprompt");if(ta)copy(ta.value,e.target);return}
@@ -296,7 +297,7 @@ if(!blob.type||blob.type.indexOf("image/")!==0)throw new Error("The service did 
 if(imgUrl)URL.revokeObjectURL(imgUrl);imgUrl=URL.createObjectURL(blob);
 $("imgpreview").src=imgUrl;$("imgpreview").style.display="block";$("imgdownload").href=imgUrl;$("imgdownload").hidden=false;
 var ext=blob.type.indexOf("png")>=0?"png":"jpg";$("imgdownload").download="persona-"+P.name.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"."+ext;
-$("imgstatus").textContent="Image generated. You can preview it or download it.";
+$("imgstatus").textContent="Image generated. You can preview it, download it, or save this character for reuse.";$("saveGeneratedCharacter").hidden=false;
 try{var hist=JSON.parse(localStorage.getItem("ps_image_history")||"[]");var fr=new FileReader();fr.onload=function(){hist.unshift({data:fr.result,name:P.name,date:Date.now(),prompt:prompt});try{localStorage.setItem("ps_image_history",JSON.stringify(hist.slice(0,4)))}catch(e){localStorage.setItem("ps_image_history",JSON.stringify(hist.slice(0,1)))}renderSavedImages()};fr.readAsDataURL(blob)}catch(e){}
 }).catch(function(err){$("imgstatus").textContent=err.message||"Could not generate the image. Try again."}).then(function(){btn.disabled=false;btn.textContent="Generate image"});
 }
