@@ -104,7 +104,7 @@ export default {
           return json({ error: "Xavira did not return an image or generation ID." }, 502);
         }
 
-        if (env.FAL_KEY) {
+        if (env.FAL_KEY && body.provider !== "cloudflare") {
           const falResponse = await fetch(referenceImage ? "https://fal.run/fal-ai/flux-2-flex/edit" : "https://fal.run/fal-ai/flux-2-flex", {
             method: "POST",
             headers: { "Authorization": "Key " + env.FAL_KEY, "Content-Type": "application/json" },
