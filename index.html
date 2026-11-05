@@ -93,6 +93,15 @@ pre{background:#0c0f1b;border-color:#38364e;color:#eeeaff}
 
 /* Show one feature choice per row on every screen size. */
 .feature-options{grid-template-columns:minmax(0,1fr)!important}
+
+/* Keep the feature editor in one vertical list with text-only choices. */
+#visualCharacterBuilder .feature-groups{display:grid!important;grid-template-columns:minmax(0,1fr)!important}
+#visualCharacterBuilder .feature-group{width:100%;grid-column:1/-1}
+#visualCharacterBuilder .feature-options{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:7px}
+#visualCharacterBuilder .feature-option{display:flex;align-items:center;justify-content:flex-start;min-height:44px;width:100%;padding:10px 13px;text-align:left}
+#visualCharacterBuilder .feature-option span:last-child{font-size:.9rem;min-height:0}
+#visualCharacterBuilder .feature-option[aria-pressed=true]{border:2px solid #a78bfa;background:#292044}
+#visualCharacterBuilder .feature-option svg,#visualCharacterBuilder .feature-option img{display:none!important}
 </style>
 </head>
 <body>
@@ -225,7 +234,7 @@ else if(group==="Hair length"||group==="Hair texture"){svg='<circle cx="50" cy="
 else{svg='<circle cx="50" cy="48" r="30" fill="#27283b" stroke="#8c7cae" stroke-width="2"/><path d="M30 52 Q50 28 70 52 M35 68 Q50 78 65 68" fill="none" stroke="#d8c8ee" stroke-width="3" stroke-linecap="round"/>'}
 return '<svg class="feature-visual" viewBox="0 0 100 100" role="img" aria-label="'+esc(group+": "+opt[0])+' reference illustration">'+svg+'</svg>'
 }
-function featureBuilderMarkup(){var h='<div class="card" id="visualCharacterBuilder"><div class="head"><h3>Visual Character Builder</h3><span class="fmt">Character details · Tap to select</span></div><p class="builder-intro">Work from the face down to the body. These are labeled visual guides rather than unrelated stock photos or emoji placeholders. Outfit changes do not reset your selected proportions.</p><label for="outfitStyleSelect">Outfit style</label><select id="outfitStyleSelect"><option>Fully clothed</option><option>Lingerie</option><option>Swimwear</option><option>Activewear</option><option>Sleepwear</option></select><div class="feature-groups">';featureGroupOrder.forEach(function(group){if(!featureData[group])return;h+='<section class="feature-group"><h4>'+esc(group)+'</h4><div class="feature-options">';featureData[group].forEach(function(opt,i){var selected=featureSelections[group]===opt[0],isBody=group==="Body type"||group==="Bust size"||group==="Butt size"||group==="Height"||group==="Build details";h+='<button type="button" class="feature-option" data-feature-group="'+esc(group)+'" data-feature-value="'+esc(opt[0])+'" aria-pressed="'+selected+'">'+(isBody?bodyReferenceMarkup(group,opt):featureVisualMarkup(group,opt,i))+'<span>'+esc(opt[0])+'</span></button>'});h+='</div></section>'});h+='</div><div class="feature-actions"><button type="button" class="small" id="buildFeaturePrompt">Create character prompt</button><button type="button" class="small" id="clearFeatureChoices">Clear selections</button></div><textarea id="featurePrompt" class="feature-prompt" placeholder="Your generated character prompt will appear here...">'+esc(featurePromptText())+'</textarea><div class="feature-actions"><button type="button" class="small" id="useFeaturePrompt">Use in image generator</button><button type="button" class="small" id="copyFeaturePrompt">Copy prompt</button></div></div>';return h}
+function featureBuilderMarkup(){var h='<div class="card" id="visualCharacterBuilder"><div class="head"><h3>Visual Character Builder</h3><span class="fmt">Character details · Tap to select</span></div><p class="builder-intro">Work from the face down to the body. These are labeled visual guides rather than unrelated stock photos or emoji placeholders. Outfit changes do not reset your selected proportions.</p><label for="outfitStyleSelect">Outfit style</label><select id="outfitStyleSelect"><option>Fully clothed</option><option>Lingerie</option><option>Swimwear</option><option>Activewear</option><option>Sleepwear</option></select><div class="feature-groups">';featureGroupOrder.forEach(function(group){if(!featureData[group])return;h+='<section class="feature-group"><h4>'+esc(group)+'</h4><div class="feature-options">';featureData[group].forEach(function(opt,i){var selected=featureSelections[group]===opt[0],isBody=group==="Body type"||group==="Bust size"||group==="Butt size"||group==="Height"||group==="Build details";h+='<button type="button" class="feature-option" data-feature-group="'+esc(group)+'" data-feature-value="'+esc(opt[0])+'" aria-pressed="'+selected+'"><span>'+esc(opt[0])+'</span></button>'});h+='</div></section>'});h+='</div><div class="feature-actions"><button type="button" class="small" id="buildFeaturePrompt">Create character prompt</button><button type="button" class="small" id="clearFeatureChoices">Clear selections</button></div><textarea id="featurePrompt" class="feature-prompt" placeholder="Your generated character prompt will appear here...">'+esc(featurePromptText())+'</textarea><div class="feature-actions"><button type="button" class="small" id="useFeaturePrompt">Use in image generator</button><button type="button" class="small" id="copyFeaturePrompt">Copy prompt</button></div></div>';return h}
 
 try{var visualHost=$("visualCharacterBuilderHost");if(visualHost){visualHost.innerHTML=featureBuilderMarkup();visualHost.style.display="block";}}catch(builderError){var visualHost=$("visualCharacterBuilderHost");if(visualHost)visualHost.innerHTML='<div class="card" style="display:block!important"><h3>Visual Character Builder</h3><p>The visual selector panel could not load: '+esc(builderError&&builderError.message||"Unknown error")+'</p></div>';console.error("Visual Character Builder failed:",builderError);}
 function build(){
@@ -352,9 +361,9 @@ if(e.target&&e.target.id==="imgpost"){var v=e.target.value;if(v!=="custom"&&week
 if(e.target&&e.target.id==="aspectRatio"){e.target.setAttribute("data-selected",e.target.value)}
 });
 document.addEventListener("click",function(e){
-if(e.target&&e.target.closest("button[data-feature-group]")){var fb=e.target.closest("button[data-feature-group]"),fg=fb.getAttribute("data-feature-group"),fv=fb.getAttribute("data-feature-value");if(featureSelections[fg]===fv)delete featureSelections[fg];else featureSelections[fg]=fv;var builder=$("visualCharacterBuilder"),temp=document.createElement("div");temp.innerHTML=featureBuilderMarkup();builder.innerHTML=temp.firstElementChild.innerHTML;return}
+
 if(e.target&&e.target.id==="buildFeaturePrompt"){var fp=featurePromptText();$("featurePrompt").value=fp;if(fp)$("imgprompt").value=fp;return}
-if(e.target&&e.target.id==="clearFeatureChoices"){featureSelections={};var builder=$("visualCharacterBuilder"),temp=document.createElement("div");temp.innerHTML=featureBuilderMarkup();builder.innerHTML=temp.firstElementChild.innerHTML;return}
+
 if(e.target&&e.target.id==="useFeaturePrompt"){var fp=$("featurePrompt").value||featurePromptText();if(!fp){$("imgstatus").textContent="Choose features and create a prompt first.";return}$("imgprompt").value=fp;$("imgprompt").scrollIntoView({behavior:"smooth",block:"center"});return}
 if(e.target&&e.target.id==="copyFeaturePrompt"){copy($("featurePrompt").value||featurePromptText(),e.target);return}
 
