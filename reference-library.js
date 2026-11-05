@@ -270,6 +270,66 @@
         source: "https://www.pexels.com/photo/portrait-of-a-woman-with-natural-hair-against-dark-background-36120417/",
         license: "Pexels License"
       },
+            {
+        id: "age-18-24",
+        src: "https://images.pexels.com/photos/27896914/pexels-photo-27896914.jpeg",
+        group: "Age range",
+        value: "Adult 18–24",
+        visibleTraits: ["Age range"],
+        context: {},
+        alt: "Close-up portrait of a young adult woman",
+        creator: "Ryan Garry",
+        source: "https://www.pexels.com/photo/portrait-of-a-woman-27896914/",
+        license: "Pexels License"
+      },
+      {
+        id: "age-25-34",
+        src: "https://images.pexels.com/photos/30468635/pexels-photo-30468635.jpeg",
+        group: "Age range",
+        value: "Adult 25–34",
+        visibleTraits: ["Age range"],
+        context: {},
+        alt: "Portrait of a young adult woman in a white shirt",
+        creator: "Augusto Carneiro Junior",
+        source: "https://www.pexels.com/photo/elegant-portrait-of-a-young-woman-in-white-shirt-30468635/",
+        license: "Pexels License"
+      },
+      {
+        id: "age-35-44",
+        src: "https://images.pexels.com/photos/34210856/pexels-photo-34210856.jpeg",
+        group: "Age range",
+        value: "Adult 35–44",
+        visibleTraits: ["Age range"],
+        context: {},
+        alt: "Portrait of a mature adult woman with grey hair",
+        creator: "melbourne ross",
+        source: "https://www.pexels.com/photo/sophisticated-mature-woman-in-leather-jacket-34210856/",
+        license: "Pexels License"
+      },
+      {
+        id: "age-45-54",
+        src: "https://images.pexels.com/photos/6874301/pexels-photo-6874301.jpeg",
+        group: "Age range",
+        value: "Adult 45–54",
+        visibleTraits: ["Age range"],
+        context: {},
+        alt: "Portrait of a mature adult woman in side view",
+        creator: "Teona Swift",
+        source: "https://www.pexels.com/photo/concerned-mature-woman-standing-against-wall-in-room-6874301/",
+        license: "Pexels License"
+      },
+      {
+        id: "age-55-plus",
+        src: "https://images.pexels.com/photos/12644998/pexels-photo-12644998.jpeg",
+        group: "Age range",
+        value: "Adult 55+",
+        visibleTraits: ["Age range"],
+        context: {},
+        alt: "Close-up portrait of a smiling senior woman",
+        creator: "BOOM Photography",
+        source: "https://www.pexels.com/photo/portrait-of-smiling-old-grey-haired-woman-12644998/",
+        license: "Pexels License"
+      },
     ]
   };
 
