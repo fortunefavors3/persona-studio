@@ -24,13 +24,25 @@ export default {
       const age = Number(body.age);
       const ageRange = age >= 30 ? "30-39" : "23-29";
       const gender = body.gender === "male" ? "male" : "female";
+      const requestedEthnicity = typeof body.ethnicity === "string" ? body.ethnicity.trim().toLowerCase() : "";
+      const ethnicity = /african american|black|afro-caribbean|west african|east african/.test(requestedEthnicity)
+        ? "black"
+        : /latina|hispanic/.test(requestedEthnicity) ? "hispanic"
+        : /east asian/.test(requestedEthnicity) ? "east-asian"
+        : /south asian/.test(requestedEthnicity) ? "south-asian"
+        : /middle eastern|north african/.test(requestedEthnicity) ? "middle-eastern"
+        : /white|european/.test(requestedEthnicity) ? "white"
+        : /mixed/.test(requestedEthnicity) ? "mixed" : undefined;
+      const skinTone = typeof body.skinTone === "string" ? body.skinTone.trim().toLowerCase() : "";
+      const hairColor = typeof body.hairColor === "string" ? body.hairColor.trim().toLowerCase() : "";
+      const hairTexture = typeof body.hairTexture === "string" ? body.hairTexture.trim().toLowerCase() : "";
       const traits = {
         gender,
-        ethnicity: "white",
+        ...(ethnicity ? { ethnicity } : {}),
         ageRange,
-        hairLength: "long",
-        hairColor: "brown",
-        build: "slim"
+        ...(hairColor ? { hairColor } : {}),
+        ...(hairTexture ? { hairTexture } : {}),
+        ...(skinTone ? { skinTone } : {})
       };
       const idem = typeof body.idempotencyKey === "string" && /^[a-zA-Z0-9_-]{12,100}$/.test(body.idempotencyKey)
         ? body.idempotencyKey : crypto.randomUUID();
