@@ -184,6 +184,23 @@ pre{background:#0c0f1b;border-color:#38364e;color:#eeeaff}
 @media(max-width:900px){#visualCharacterBuilder .feature-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}#visualCharacterBuilder .feature-photo,#visualCharacterBuilder .feature-visual,#visualCharacterBuilder .feature-art,#visualCharacterBuilder .body-reference,#visualCharacterBuilder .feature-photo-placeholder,#visualCharacterBuilder .feature-thumb{height:125px!important}}
 @media(max-width:520px){#visualCharacterBuilder .feature-options{grid-template-columns:minmax(0,1fr)!important}#visualCharacterBuilder .feature-option{flex-direction:row!important;align-items:center!important;text-align:left!important}#visualCharacterBuilder .feature-photo,#visualCharacterBuilder .feature-visual,#visualCharacterBuilder .feature-art,#visualCharacterBuilder .body-reference,#visualCharacterBuilder .feature-photo-placeholder,#visualCharacterBuilder .feature-thumb{flex:0 0 112px!important;width:112px!important;height:88px!important}#visualCharacterBuilder .feature-option span:last-child{text-align:left!important}}
 
+
+/* Final trait-row layout: one horizontal, touch-scrollable carousel per category. */
+#visualCharacterBuilder .feature-groups{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;gap:14px!important}
+#visualCharacterBuilder .feature-group{display:block!important;width:100%!important;min-width:0!important;grid-column:auto!important}
+#visualCharacterBuilder .feature-options{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;grid-template-columns:none!important;gap:10px!important;width:100%;overflow-x:auto!important;overflow-y:hidden!important;padding:4px 2px 12px!important;scroll-snap-type:x proximity!important;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+#visualCharacterBuilder .feature-option{display:flex!important;flex:0 0 150px!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:8px!important;width:150px!important;min-width:150px!important;min-height:0!important;padding:9px!important;text-align:center!important;scroll-snap-align:start!important}
+#visualCharacterBuilder .feature-option[aria-pressed=true]{padding:8px!important}
+#visualCharacterBuilder .feature-thumb{display:block!important;width:100%!important;height:126px!important;overflow:hidden!important;border-radius:8px!important}
+#visualCharacterBuilder .feature-photo,#visualCharacterBuilder .feature-visual,#visualCharacterBuilder .feature-art,#visualCharacterBuilder .body-reference{display:block!important;flex:none!important;width:100%!important;height:126px!important;max-width:none!important;object-fit:cover!important;object-position:center 35%!important;border-radius:8px!important;margin:0!important;padding:0!important}
+#visualCharacterBuilder .feature-photo-placeholder{display:flex!important;flex:none!important;width:100%!important;height:126px!important;align-items:center!important;justify-content:center!important}
+#visualCharacterBuilder .feature-option span:last-child{display:block!important;min-height:2.2em!important;font-size:.84rem!important;line-height:1.25!important;text-align:center!important}
+#visualCharacterBuilder .feature-options::-webkit-scrollbar{height:7px}
+#visualCharacterBuilder .feature-options::-webkit-scrollbar-thumb{background:#65558f;border-radius:8px}
+#visualCharacterBuilder .feature-options{scrollbar-color:#65558f #171827;scrollbar-width:thin}
+@media(min-width:1100px){#visualCharacterBuilder .feature-option{flex-basis:160px!important;width:160px!important;min-width:160px!important}}
+@media(max-width:520px){#visualCharacterBuilder .feature-option{flex-basis:124px!important;width:124px!important;min-width:124px!important}#visualCharacterBuilder .feature-thumb,#visualCharacterBuilder .feature-photo,#visualCharacterBuilder .feature-visual,#visualCharacterBuilder .feature-art,#visualCharacterBuilder .body-reference,#visualCharacterBuilder .feature-photo-placeholder{height:108px!important}}
+
 </style>
 </head>
 <body>
