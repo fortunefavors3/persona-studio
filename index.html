@@ -361,13 +361,18 @@ var text=pick(P.t.open)+" "+cap+" "+pick(P.t.close);
 var outfit=outfitPromptText(),set=pick(P.N.set||P.v.set);
 var prompt="Photorealistic editorial photograph of the same fictional adult woman: "+P.hair+", "+P.skin+", "+P.eyes+", wearing "+outfit+", in "+set+", "+P.v.light+", color palette "+P.v.pal+". "+featureLookText()+" Natural candid framing, full-frame camera, 50mm portrait lens, realistic depth of field.";
 return {day:d[0],fmt:PF[$("plat").value][d[1]]||d[1],cap:text+($("emo").checked?" "+pick(P.N.emo):""),prompt:prompt,tags:some(P.tags,3)}})}
-function discText(){return $("disc").checked?"\n\nAI-generated character. #AIgenerated":""}
-function capFull(w){return w.cap+"\n\n"+w.tags.map(function(x){return "#"+x}).join(" ")+discText()}
+function discText(){return $("disc").checked?"
+
+AI-generated character. #AIgenerated":""}
+function capFull(w){return w.cap+"
+
+"+w.tags.map(function(x){return "#"+x}).join(" ")+discText()}
 function render(){
 var h='<div class="card hero"><h2>'+esc(P.name)+'</h2><p class="meta">'+esc(P.handle)+' · '+esc(P.age)+' · '+esc(P.city)+' · '+esc(P.N.label)+'</p><p style="margin:0">'+esc(P.story)+'</p>'+
 '<div class="facts"><div><b>Voice</b>'+esc(P.toneText||({warm:"Warm, welcoming, asks questions",playful:"Playful, light, a little cheeky",calm:"Calm, minimal, unhurried",bold:"Direct, confident, to the point"})[P.tone])+'</div><div><b>Favorite things</b>'+esc(P.hobbies.join(", ")+(P.drink?"; "+P.drink:""))+'</div></div>'+
 '<div class="tags">'+P.pillars.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div></div>';
-h+='<div class="card"><div class="head"><h3>Look guide</h3><span><button class="small" data-copy="sheet">Copy persona sheet</button> <button class="small" data-copy="look">Copy look</button></span></div><pre id="look">'+esc(P.look)+'\nReuse this description in every image prompt to keep her face and style consistent.</pre></div>';
+h+='<div class="card"><div class="head"><h3>Look guide</h3><span><button class="small" data-copy="sheet">Copy persona sheet</button> <button class="small" data-copy="look">Copy look</button></span></div><pre id="look">'+esc(P.look)+'
+Reuse this description in every image prompt to keep her face and style consistent.</pre></div>';
 h+='<div class="card"><div class="head"><h3>'+(week.length>7?"30-day plan":"Week of content")+'</h3><span><button class="small" data-copy="all">Copy all</button> <button class="small" data-copy="export">Export .md</button></span></div>';
 week.forEach(function(w,i){h+='<div class="day"><div class="top"><strong>'+esc(w.day)+'</strong><span class="fmt">'+esc(w.fmt)+'</span></div><p>'+esc(w.cap)+'</p><div class="tags" style="margin:0 0 8px">'+w.tags.map(function(x){return "<span>#"+esc(x)+"</span>"}).join("")+'</div><details><summary class="fmt" style="cursor:pointer">Image prompt</summary><pre style="margin-top:8px">'+esc(w.prompt)+'</pre></details><button class="small" style="margin-top:8px" data-copy="d'+i+'">Copy caption</button>'+(sampleFn?' <button class="small" style="margin-top:8px" data-rw="'+i+'">Rewrite with AI</button>':'')+'</div>'});
 h+='<p class="small-note">Captions are templates. Edit them to fit your voice before posting.</p></div>';
@@ -514,7 +519,9 @@ fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"}
 .then(function(){genButton.disabled=false;genButton.textContent="Update Character"});
 return;
 }
-if(button.id==="previousFeatureStep"){currentFeatureStep=Math.max(0,currentFeatureStep-1);$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();return;}\nif(button.id==="skipFeatureStep"){var skipGroups=featureGroupOrder.filter(function(name){return !!featureData[name]});currentFeatureStep=Math.min(currentFeatureStep+1,skipGroups.length-1);$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();return;}\nvar randomButton=e.target.closest("button[data-random-group]");if(randomButton){var randomGroup=randomButton.getAttribute("data-random-group"),randomOptions=featureData[randomGroup]||[];if(randomOptions.length){var available=randomOptions.filter(function(option){return option[0]!==featureSelections[randomGroup]});var randomPick=pick(available.length?available:randomOptions);featureSelections[randomGroup]=randomPick[0];var randomSteps=featureGroupOrder.filter(function(name){return !!featureData[name]});currentFeatureStep=Math.min(currentFeatureStep+1,randomSteps.length-1);$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();}return;}
+if(button.id==="previousFeatureStep"){currentFeatureStep=Math.max(0,currentFeatureStep-1);$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();return;}
+if(button.id==="skipFeatureStep"){var skipGroups=featureGroupOrder.filter(function(name){return !!featureData[name]});currentFeatureStep=Math.min(currentFeatureStep+1,skipGroups.length-1);$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();return;}
+var randomButton=e.target.closest("button[data-random-group]");if(randomButton){var randomGroup=randomButton.getAttribute("data-random-group"),randomOptions=featureData[randomGroup]||[];if(randomOptions.length){var available=randomOptions.filter(function(option){return option[0]!==featureSelections[randomGroup]});var randomPick=pick(available.length?available:randomOptions);featureSelections[randomGroup]=randomPick[0];var randomSteps=featureGroupOrder.filter(function(name){return !!featureData[name]});currentFeatureStep=Math.min(currentFeatureStep+1,randomSteps.length-1);$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();}return;}
 var choice=e.target.closest("button[data-feature-group]");
 if(choice){
 var group=choice.getAttribute("data-feature-group"),value=choice.getAttribute("data-feature-value");
@@ -547,9 +554,22 @@ var rw=e.target.closest("button[data-rw]");if(rw&&P&&sampleFn){rewrite(+rw.getAt
 var ex=e.target.closest("button[data-copy=export]");if(ex&&P){exportMd(ex);return}
 var b=e.target.closest("button[data-copy]");if(!b||!P)return;
 var k=b.getAttribute("data-copy"),t="";
-if(k==="sheet")t=P.name+" ("+P.handle+")\nNiche: "+P.N.label+"\nVoice: "+(P.toneText||P.tone)+"\n\n"+P.story+"\n\nLook: "+P.look+"\n\nPillars: "+P.pillars.join(", ");
+if(k==="sheet")t=P.name+" ("+P.handle+")
+Niche: "+P.N.label+"
+Voice: "+(P.toneText||P.tone)+"
+
+"+P.story+"
+
+Look: "+P.look+"
+
+Pillars: "+P.pillars.join(", ");
 else if(k==="look")t=P.look;
-else if(k==="all")t=week.map(function(w){return w.day+" ("+w.fmt+")\n"+capFull(w)}).join("\n\n---\n\n");
+else if(k==="all")t=week.map(function(w){return w.day+" ("+w.fmt+")
+"+capFull(w)}).join("
+
+---
+
+");
 else t=capFull(week[+k.slice(1)]);
 copy(t,b)});
 var sampleFn=null;
@@ -561,13 +581,20 @@ var nm=$("name").value.trim(),dir=$("dir").value.trim(),n=+$("freq").value,pl=$(
 var days={3:["Monday","Wednesday","Friday"],5:["Monday","Tuesday","Wednesday","Friday","Saturday"],7:["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]}[n];
 var L=$("len").value==="30",dl=days,wd=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],ix={3:[0,2,4],5:[0,1,2,4,5],7:[0,1,2,3,4,5,6]}[n];if(L){dl=[];for(var j=0;j<30;j++){if(ix.indexOf(j%7)>-1)dl.push("Day "+(j+1)+" ("+wd[j%7]+")")}}
 var fmts={ig:"Reel, Carousel, Story, or Photo post",tt:"TikTok video or Photo carousel",yt:"YouTube Short or Community post"}[pl];
-var s="Create a fictional, clearly AI-generated social media character and a content week. Rules: the character is an adult aged 24 to 35 (default to a woman unless the creator's direction says otherwise); everything is family-friendly with no sexual or suggestive content; no real people and no brand endorsements; no medical claims, extreme diets, or weight-cutting advice. Be specific and original: avoid cliches and generic names, and give the persona real texture (a small contradiction, a running joke, a signature habit).\n";
-s+="Niche: "+$("niche").selectedOptions[0].text+". Voice: "+$("tone").selectedOptions[0].text+". Visual aesthetic: "+$("vibe").selectedOptions[0].text+". Platform: "+$("plat").selectedOptions[0].text+" (use only these formats: "+fmts+").\n";
-if(featurePromptText())s+="Mandatory visual character-builder selections; preserve these exact traits in persona.look and every image_prompt: "+featurePromptText()+"\n";
-if(nm)s+="The character's name is "+nm+".\n";
-if(dir)s+="Extra direction from the creator: "+dir+"\n";
-if(keep)s+="Reuse this persona exactly as given and write a fresh week: "+JSON.stringify({name:P.name,handle:P.handle,age:P.age,city:P.city,backstory:P.story,look:P.look,voice:P.toneText,pillars:P.pillars})+"\n";
-s+="Write captions for these days, in order: "+dl.join(", ")+". Each caption is "+(L?"1 to 2 short sentences":"1 to 3 sentences")+" in the character's voice, concrete and specific to the niche"+($("emo").checked?", with one fitting emoji":"")+", with no hashtags and no AI disclosure in the text. "+(L?"Each image_prompt is only the outfit, setting, lighting, and camera framing in under 30 words, safe for work (the app adds the character's look).":"Each image_prompt must be fully self-contained: restate the character's look in full, then the outfit, setting, lighting, and camera framing, safe for work.")+"\n";
+var s="Create a fictional, clearly AI-generated social media character and a content week. Rules: the character is an adult aged 24 to 35 (default to a woman unless the creator's direction says otherwise); everything is family-friendly with no sexual or suggestive content; no real people and no brand endorsements; no medical claims, extreme diets, or weight-cutting advice. Be specific and original: avoid cliches and generic names, and give the persona real texture (a small contradiction, a running joke, a signature habit).
+";
+s+="Niche: "+$("niche").selectedOptions[0].text+". Voice: "+$("tone").selectedOptions[0].text+". Visual aesthetic: "+$("vibe").selectedOptions[0].text+". Platform: "+$("plat").selectedOptions[0].text+" (use only these formats: "+fmts+").
+";
+if(featurePromptText())s+="Mandatory visual character-builder selections; preserve these exact traits in persona.look and every image_prompt: "+featurePromptText()+"
+";
+if(nm)s+="The character's name is "+nm+".
+";
+if(dir)s+="Extra direction from the creator: "+dir+"
+";
+if(keep)s+="Reuse this persona exactly as given and write a fresh week: "+JSON.stringify({name:P.name,handle:P.handle,age:P.age,city:P.city,backstory:P.story,look:P.look,voice:P.toneText,pillars:P.pillars})+"
+";
+s+="Write captions for these days, in order: "+dl.join(", ")+". Each caption is "+(L?"1 to 2 short sentences":"1 to 3 sentences")+" in the character's voice, concrete and specific to the niche"+($("emo").checked?", with one fitting emoji":"")+", with no hashtags and no AI disclosure in the text. "+(L?"Each image_prompt is only the outfit, setting, lighting, and camera framing in under 30 words, safe for work (the app adds the character's look).":"Each image_prompt must be fully self-contained: restate the character's look in full, then the outfit, setting, lighting, and camera framing, safe for work.")+"
+";
 s+="Return only JSON with this shape: {\"persona\":{\"name\":\"\",\"handle\":\"\",\"age\":0,\"city\":\"\",\"backstory\":\"3 sentences\",\"voice\":\"one sentence on how they write\",\"look\":\"2 sentences: face, hair, skin, build, signature style, palette\",\"favorite_things\":[\"3 items\"],\"pillars\":[\"4 content pillars\"],\"hashtags\":[\"5 tags without #, include aigenerated\"]},\"week\":[{\"day\":\"\",\"format\":\"\",\"caption\":\"\",\"hashtags\":[\"3 tags without #\"],\"image_prompt\":\"\"}]}";
 return s}
 function ai(keep){
@@ -615,13 +642,35 @@ return '<div class="cc"><h3>'+esc(p.name)+'</h3><p class="fmt">'+esc(p.handle)+'
 $("out").innerHTML='<div class="card"><div class="head"><h3>Compare</h3></div><div class="cmp">'+cols.join("")+'</div></div>'}
 function rewrite(i,btn){
 var w=week[i],o=btn.textContent;btn.disabled=true;btn.textContent="Rewriting...";
-var s='Rewrite one social media post for a fictional, clearly AI-generated character. Keep it family-friendly and safe for work. Character: '+P.name+', '+P.city+'. Niche: '+P.N.label+'. Voice: '+(P.toneText||P.tone)+'. Look: '+P.look+'. Format: '+w.fmt+'. Current caption: '+w.cap+'\nWrite a clearly different caption (1 to 3 sentences, specific, no hashtags, no AI disclosure'+($("emo").checked?', one fitting emoji':'')+'), 3 hashtags without #, and a self-contained image_prompt that restates the look, then outfit, setting, lighting, and framing. Return only JSON: {"caption":"","hashtags":["3 tags"],"image_prompt":""}';
+var s='Rewrite one social media post for a fictional, clearly AI-generated character. Keep it family-friendly and safe for work. Character: '+P.name+', '+P.city+'. Niche: '+P.N.label+'. Voice: '+(P.toneText||P.tone)+'. Look: '+P.look+'. Format: '+w.fmt+'. Current caption: '+w.cap+'
+Write a clearly different caption (1 to 3 sentences, specific, no hashtags, no AI disclosure'+($("emo").checked?', one fitting emoji':'')+'), 3 hashtags without #, and a self-contained image_prompt that restates the look, then outfit, setting, lighting, and framing. Return only JSON: {"caption":"","hashtags":["3 tags"],"image_prompt":""}';
 sampleFn.json(s).then(function(r){
 w.cap=String(r.caption||w.cap);var t=lst(r.hashtags,4);if(t.length)w.tags=t;if(r.image_prompt)w.prompt=String(r.image_prompt);
 render();save()}).catch(function(){btn.disabled=false;btn.textContent="Try again"})}
 function md(){
-var s="# "+P.name+" ("+P.handle+")\n\nNiche: "+P.N.label+"\nVoice: "+(P.toneText||P.tone)+"\n\n"+P.story+"\n\n## Look\n\n"+P.look+"\n\n## Content plan\n\n";
-week.forEach(function(w){s+="### "+w.day+" ("+w.fmt+")\n\n"+w.cap+"\n\n"+w.tags.map(function(x){return "#"+x}).join(" ")+discText()+"\n\nImage prompt: "+w.prompt+"\n\n"});
+var s="# "+P.name+" ("+P.handle+")
+
+Niche: "+P.N.label+"
+Voice: "+(P.toneText||P.tone)+"
+
+"+P.story+"
+
+## Look
+
+"+P.look+"
+
+## Content plan
+
+";
+week.forEach(function(w){s+="### "+w.day+" ("+w.fmt+")
+
+"+w.cap+"
+
+"+w.tags.map(function(x){return "#"+x}).join(" ")+discText()+"
+
+Image prompt: "+w.prompt+"
+
+"});
 return s}
 var dl=null;
 if(window.claude&&window.claude.use){window.claude.use("downloads").then(function(d){dl=d}).catch(function(){})}
