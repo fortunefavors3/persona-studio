@@ -462,7 +462,7 @@ $("characterLibraryList").addEventListener("click",function(e){
 var b=e.target.closest("button[data-char-action]");if(!b)return;
 handleCharacterLibraryAction(b.getAttribute("data-char-action"),b.getAttribute("data-char-key"));
 });
-$("out").addEventListener("change",function(e){
+document.addEventListener("change",function(e){
 if(e.target&&e.target.id==="scenePreset"&&e.target.value){var baseLook=P&&P.look?P.look+" ":"";$("imgprompt").value=limitImagePrompt(baseLook+e.target.value)}
 
 if(e.target&&e.target.id==="imgpost"){var v=e.target.value;if(P&&v!=="custom"&&week&&week[+v])$("imgprompt").value=limitImagePrompt(P.look+" "+week[+v].prompt)}
