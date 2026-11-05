@@ -451,7 +451,7 @@ try{var hist=JSON.parse(localStorage.getItem("ps_image_history")||"[]");var fr=n
 });
 $("visualCharacterBuilderHost").addEventListener("change",function(e){if(e.target&&e.target.id==="outfitStyleSelect"){outfitStyle=e.target.value;$("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();}});
 $("visualCharacterBuilderHost").addEventListener("click",function(e){
-
+var button=e.target.closest("button");if(!button)return;
 if(button.id==="generateFeaturePreview"){
 var genButton=button,status=$("featurePreviewStatus"),cached=null,usage=0,prompt=featurePromptText();
 try{cached=JSON.parse(localStorage.getItem("ps_feature_preview_v1")||"null");usage=Number(localStorage.getItem("ps_feature_preview_count_v1")||0)}catch(e){}
@@ -473,8 +473,6 @@ if(featureSelections[group]===value)delete featureSelections[group];else feature
 $("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();
 return;
 }
-var button=e.target.closest("button");
-if(!button)return;
 if(button.id==="clearFeatureChoices"){
 featureSelections={};
 $("visualCharacterBuilderHost").innerHTML=featureBuilderMarkup();
