@@ -22,7 +22,6 @@ export default {
       const name = typeof body.name === "string" ? body.name.trim().slice(0, 60) : "Look Here Sin character";
       const appearance = typeof body.look === "string" ? body.look.trim().slice(0, 300) : "";
       const age = Number(body.age);
-      const ageRange = age >= 30 ? "30-39" : "23-29";
       const gender = body.gender === "male" ? "male" : "female";
       const requestedEthnicity = typeof body.ethnicity === "string" ? body.ethnicity.trim().toLowerCase() : "";
       const ethnicity = /african american|black|afro-caribbean|west african|east african/.test(requestedEthnicity)
