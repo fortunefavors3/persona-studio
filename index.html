@@ -102,6 +102,46 @@ pre{background:#0c0f1b;border-color:#38364e;color:#eeeaff}
 #visualCharacterBuilder .feature-option span:last-child{font-size:.9rem;min-height:0}
 #visualCharacterBuilder .feature-option[aria-pressed=true]{border:2px solid #a78bfa;background:#292044}
 #visualCharacterBuilder .feature-option svg,#visualCharacterBuilder .feature-option img{display:none!important}
+
+/* Main-branch feature-preserving visual redesign based on the redesign branch */
+:root{color-scheme:dark;--bg:#090b14;--surface:#151727;--ink:#f5f2ff;--mute:#aaa5c3;--line:#34324f;--accent:#8b5cf6;--accent-ink:#fff;--sun:#c4b5fd}
+body{min-height:100vh;background:radial-gradient(1100px 480px at 15% -10%,#35236e66,transparent),#090b14;color:var(--ink)}
+.wrap{max-width:1500px;padding:22px 18px 48px}
+header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:12px 4px 22px;border-bottom:1px solid #393052;margin-bottom:18px}
+h1{font-size:clamp(2rem,5vw,3.6rem);letter-spacing:-.04em;background:linear-gradient(90deg,#fff,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+header p{margin:5px 0 0;max-width:65ch}
+.grid{grid-template-columns:minmax(280px,380px) minmax(0,1fr);gap:18px;margin-top:0;align-items:start}
+.panel,.card{background:linear-gradient(145deg,#191b2c,#111420);border:1px solid #393750;border-radius:14px;box-shadow:0 8px 24px #0004;color:var(--ink)}
+.panel{position:static;max-height:none;overflow:visible}
+.panel:before{content:"Persona Settings";display:block;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1.3rem;font-weight:700;margin:0 0 16px;padding:0 0 13px;border-bottom:1px solid #393451}
+label{color:#e9e4fa}
+input[type=text],select,.image-maker textarea,.feature-prompt{background:#0e1120;border-color:#45415f;color:#f6f2ff}
+input[type=file]{color:#d9d2f3}
+button{background:#201f34;border-color:#48435f;color:#f5f2ff}
+button:hover{border-color:#a78bfa}
+button.main{background:linear-gradient(100deg,#7c3aed,#a855f7);color:#fff;border:0;box-shadow:0 5px 18px #7c3aed55}
+.hero{border-left:4px solid #a78bfa}
+.tags span{background:#211d38;border-color:#484064;color:#ddd3ff}
+pre{background:#0c0f1b;border-color:#38364e;color:#eeeaff}
+#visualCharacterBuilderHost>.card{background:linear-gradient(145deg,#201d38,#121522);border:1px solid #6d55ba;box-shadow:0 12px 34px #0007;padding:20px;margin-bottom:18px;border-radius:16px}
+#visualCharacterBuilder .head{padding-bottom:12px;border-bottom:1px solid #393451}
+#visualCharacterBuilder .head h3{font-size:1.45rem}
+.builder-intro{margin:8px 0 18px}
+#visualCharacterBuilder .feature-groups{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px}
+#visualCharacterBuilder .feature-group{width:100%;grid-column:1/-1;border:1px solid #34334d;background:#101321;border-radius:12px;padding:12px;min-width:0}
+#visualCharacterBuilder .feature-group h4{font-size:.96rem;color:#f4efff}
+#visualCharacterBuilder .feature-options{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:7px}
+#visualCharacterBuilder .feature-option{display:flex;align-items:center;justify-content:flex-start;gap:12px;min-height:64px;width:100%;padding:8px 12px;text-align:left;background:#1b1d2d;border:1px solid #45425e;border-radius:9px;color:#f6f3ff;transition:.15s}
+#visualCharacterBuilder .feature-option[aria-pressed=true]{border:2px solid #a78bfa;background:#292044;box-shadow:0 0 0 2px #8b5cf633;padding:7px 11px}
+#visualCharacterBuilder .feature-option span:last-child{font-size:.9rem;color:#eee9ff;min-height:0}
+#visualCharacterBuilder .feature-photo,#visualCharacterBuilder .feature-art,#visualCharacterBuilder .feature-visual,#visualCharacterBuilder .body-reference{flex:0 0 84px;width:84px;height:54px;object-fit:cover;border-radius:7px;margin:0}
+#visualCharacterBuilder .feature-option svg{display:block!important}
+#visualCharacterBuilder .feature-actions button{background:#201c37;border-color:#6b55a8;color:#f5efff}
+.pre-reference{background:#111321;border-color:#6d55ba}
+.image-maker .warning{color:#c8c1df}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.out{grid-template-columns:1fr 1fr}.panel{order:0}}
+@media(max-width:520px){.wrap{padding:12px 10px 32px}header{display:block}.grid{gap:14px}.out{grid-template-columns:1fr}.panel,.card{padding:14px}#visualCharacterBuilderHost>.card{padding:14px}}
+
 </style>
 </head>
 <body>
