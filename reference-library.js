@@ -27,10 +27,16 @@
 
   function matchesContext(entry, selections, group) {
     var context = entry.context || {};
-    return Object.keys(context).every(function(key) {
-      if (key === group) return true;
-      return selections[key] === context[key];
+    var selectedKeys = Object.keys(selections || {}).filter(function(key) {
+      return key !== group && !!selections[key];
     });
+    var everySelectedTraitIsTagged = selectedKeys.every(function(key) {
+      return context[key] === selections[key];
+    });
+    var everyContextTraitIsCurrent = Object.keys(context).every(function(key) {
+      return key === group || selections[key] === context[key];
+    });
+    return everySelectedTraitIsTagged && everyContextTraitIsCurrent;
   }
 
   function find(group, value, selections) {
