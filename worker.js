@@ -33,16 +33,16 @@ export default {
         : /middle eastern|north african/.test(requestedEthnicity) ? "middle-eastern"
         : /white|european/.test(requestedEthnicity) ? "white"
         : /mixed/.test(requestedEthnicity) ? "mixed" : undefined;
-      const skinTone = typeof body.skinTone === "string" ? body.skinTone.trim().toLowerCase() : "";
-      const hairColor = typeof body.hairColor === "string" ? body.hairColor.trim().toLowerCase() : "";
-      const hairTexture = typeof body.hairTexture === "string" ? body.hairTexture.trim().toLowerCase() : "";
+      const hairColor = typeof body.hairColor === "string" ? body.hairColor.trim().toLowerCase() : "brown";
+      const hairLength = typeof body.hairLength === "string" ? body.hairLength.trim().toLowerCase() : "long";
+      const build = typeof body.build === "string" ? body.build.trim().toLowerCase() : "average";
       const traits = {
         gender,
         ...(ethnicity ? { ethnicity } : {}),
         ageRange,
-        ...(hairColor ? { hairColor } : {}),
-        ...(hairTexture ? { hairTexture } : {}),
-        ...(skinTone ? { skinTone } : {})
+        hairLength,
+        hairColor,
+        build
       };
       const idem = typeof body.idempotencyKey === "string" && /^[a-zA-Z0-9_-]{12,100}$/.test(body.idempotencyKey)
         ? body.idempotencyKey : crypto.randomUUID();
