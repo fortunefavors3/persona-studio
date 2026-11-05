@@ -89,8 +89,8 @@
         creator: "Yaren Aysan",
         source: "https://www.pexels.com/photo/a-close-up-of-a-person-s-eye-with-yellow-iris-16824177/",
         license: "Pexels License"
-      }
-            {
+      },
+      {
         id: "hair-color-black",
         src: "https://images.pexels.com/photos/36120417/pexels-photo-36120417.jpeg",
         group: "Hair color",
