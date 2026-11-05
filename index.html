@@ -315,7 +315,8 @@ var featureData={
 "Build details":[["Narrow shoulders","↔",""],["Broad shoulders","↔",""],["Long legs","↕",""],["Shorter legs","↕",""],["Defined waist","⌁",""],["Soft natural shape","○",""]],
 "Distinctive details":[["Freckles","✨",""],["Beauty mark","⭐",""],["Dimples","😊",""],["Soft makeup","🌸",""],["Bold makeup","💄",""],["No makeup look","🍃",""]]
 };
-var featureSelections={"Age range":"Adult 25–34","Ethnicity / heritage":"Not specified","Skin color":"Light","Hair color":"Chestnut","Eye color":"Hazel","Face shape":"Oval","Hair length":"Long","Hair texture":"Loose waves","Body type":"Average","Bust size":"Medium","Butt size":"Medium"};
+var featureSelections={};
+function fillMissingFeatureSelections(){var filled=0;featureGroupOrder.forEach(function(group){var options=featureData[group]||[];if(!options.length)return;var current=featureSelections[group];var valid=options.some(function(option){return option[0]===current});if(!valid){featureSelections[group]=pick(options)[0];filled++}});return filled}
 var outfitStyle="Fully clothed";
 function selectedFeatureBits(){var bits=[];Object.keys(featureSelections).forEach(function(k){if(featureSelections[k])bits.push(k.toLowerCase()+": "+featureSelections[k])});bits.push("outfit style: "+outfitStyle);return bits}
 function outfitPromptText(){return outfitStyle==="Lingerie"?"tasteful, non-explicit adult lingerie fashion set, fully covered intimate areas, no nudity":outfitStyle==="Swimwear"?"tasteful adult swimsuit, fully covered intimate areas, no nudity":outfitStyle==="Activewear"?"coordinated fitted athletic leggings and sports top":outfitStyle==="Sleepwear"?"modest matching pajama set or robe":"fully clothed contemporary fashion outfit"}
@@ -614,7 +615,7 @@ $("hq").addEventListener("input",hrender);hn.addEventListener("change",hrender);
 $("histlist").addEventListener("change",cmpState);$("hcmp").addEventListener("click",cmp);
 hrender();
 $("ai").addEventListener("click",function(){ai(false)});
-$("gen").type="button";$("gen").addEventListener("click",function(e){if(e)e.preventDefault();var btn=$("gen"),status=$("status");try{btn.disabled=true;if(status)status.textContent="Building your persona and content plan…";P=build();week=makeWeek();if(!P||!week||!week.length)throw new Error("The template did not return a persona or content plan.");render();save();if(status)status.textContent="Your template persona is ready.";}catch(err){console.error("Quick Template Persona error:",err);if(status)status.textContent="The template could not be generated: "+(err&&err.message?err.message:"Unknown error")+". Please try again.";}finally{btn.disabled=false;}});
+$("gen").type="button";$("gen").addEventListener("click",function(e){if(e)e.preventDefault();var btn=$("gen"),status=$("status");try{btn.disabled=true;var randomFilled=fillMissingFeatureSelections();if(status)status.textContent=randomFilled?"Randomly choosing the "+randomFilled+" appearance traits you skipped, then building your persona…":"Building your persona and content plan…";P=build();week=makeWeek();if(!P||!week||!week.length)throw new Error("The template did not return a persona or content plan.");render();save();if(status)status.textContent=randomFilled?"Your persona is ready. "+randomFilled+" unselected appearance traits were filled with random choices.":"Your template persona is ready.";}catch(err){console.error("Quick Template Persona error:",err);if(status)status.textContent="The template could not be generated: "+(err&&err.message?err.message:"Unknown error")+". Please try again.";}finally{btn.disabled=false;}});
 $("reroll").addEventListener("click",function(){if(P&&P.ai){ai(true);return}if(!P){P=build()}week=makeWeek();render();save()});
 })();
 
