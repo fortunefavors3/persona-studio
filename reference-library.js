@@ -230,7 +230,7 @@
         visibleTraits: ["Hair length"],
         context: {},
         alt: "Photograph showing a woman silhouette with shoulder-length hair",
-        creator: "Pexels contributor",
+        creator: "Luis Quintero",
         source: "https://www.pexels.com/photo/silhouette-photography-of-woman-with-shoulder-length-hair-2149794/",
         license: "Pexels License"
       },
