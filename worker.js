@@ -29,28 +29,46 @@ export default {
         ? "black"
         : /latina|hispanic/.test(requestedEthnicity) ? "hispanic"
         : /east asian/.test(requestedEthnicity) ? "east-asian"
-        : /south asian/.test(requestedEthnicity) ? "south-asian"
+        : /south.?east asian/.test(requestedEthnicity) ? "south-east-asian"
+        : /south asian|indian/.test(requestedEthnicity) ? "indian"
         : /middle eastern|north african/.test(requestedEthnicity) ? "middle-eastern"
         : /white|european/.test(requestedEthnicity) ? "white"
-        : /mixed/.test(requestedEthnicity) ? "mixed" : undefined;
-      const hairColor = typeof body.hairColor === "string" ? body.hairColor.trim().toLowerCase() : "brown";
-      const hairLength = typeof body.hairLength === "string" ? body.hairLength.trim().toLowerCase() : "long";
-      const build = typeof body.build === "string" ? body.build.trim().toLowerCase() : "average";
+        : undefined;
+      const rawHairColor = typeof body.hairColor === "string" ? body.hairColor.trim().toLowerCase() : "";
+      const hairColor = /black/.test(rawHairColor) ? "black"
+        : /brown|chestnut|brunette/.test(rawHairColor) ? "brown"
+        : /blonde|blond/.test(rawHairColor) ? "blonde"
+        : /red|ginger|auburn|copper/.test(rawHairColor) ? "auburn"
+        : /grey|gray/.test(rawHairColor) ? "grey"
+        : /white|silver/.test(rawHairColor) ? "white" : "brown";
+      const rawHairLength = typeof body.hairLength === "string" ? body.hairLength.trim().toLowerCase() : "";
+      const hairLength = /short|pixie|cropped/.test(rawHairLength) ? "short"
+        : /medium|shoulder/.test(rawHairLength) ? "medium" : "long";
+      const rawBuild = typeof body.build === "string" ? body.build.trim().toLowerCase() : "";
+      const build = /petite/.test(rawBuild) ? "petite"
+        : /slim|thin/.test(rawBuild) ? "slim"
+        : /athletic|muscular|toned/.test(rawBuild) ? "athletic"
+        : /curvy/.test(rawBuild) ? "curvy"
+        : /voluptuous|plus.?size|full.?figured/.test(rawBuild) ? "voluptuous" : undefined;
+      const ageRange = age >= 50 ? "50-plus" : age >= 40 ? "40-plus" : age >= 30 ? "30-39" : age >= 23 ? "23-29" : "18-22";
       const traits = {
         gender,
         ...(ethnicity ? { ethnicity } : {}),
         ageRange,
         hairLength,
         hairColor,
-        build
+        ...(build ? { build } : {})
       };
+      const skinTone = typeof body.skinTone === "string" ? body.skinTone.trim() : "";
+      const hairTexture = typeof body.hairTexture === "string" ? body.hairTexture.trim() : "";
+      const appearanceDetails = [skinTone ? "skin tone: " + skinTone : "", hairTexture ? "hair texture: " + hairTexture : ""].filter(Boolean).join("; ");
       const idem = typeof body.idempotencyKey === "string" && /^[a-zA-Z0-9_-]{12,100}$/.test(body.idempotencyKey)
         ? body.idempotencyKey : crypto.randomUUID();
       try {
         const response = await fetch("https://api.xavira.ai/v1/characters", {
           method: "POST",
           headers: { "Authorization": "Bearer " + env.XAVIRA_API_KEY, "Content-Type": "application/json", "Idempotency-Key": idem },
-          body: JSON.stringify({ model_id: "realistic-v2", traits, name, appearance, wait: true })
+          body: JSON.stringify({ model_id: "realistic-v2", traits, name, scene: appearanceDetails ? "Neutral studio portrait. " + appearanceDetails : "Neutral studio portrait.", wait: true })
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) return json({ error: data.message || data.error?.message || data.error || "Xavira could not create the character." }, response.status);
