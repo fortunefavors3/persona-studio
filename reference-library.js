@@ -22,7 +22,7 @@
         id: "ethnicity-african-american-black-dellon-thomas",
         src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/dellon-thomas-Fp8uh-Ls4ic-unsplash~2.jpg",
         group: "Ethnicity / heritage",
-        value: "African American / Black",
+        value: "African American",
         visibleTraits: ["Ethnicity / heritage"],
         context: {},
         alt: "Photorealistic portrait reference for the African American / Black heritage selection",
