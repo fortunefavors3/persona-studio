@@ -7,6 +7,18 @@
     version: 3,
     images: [
       {
+        id: "ethnicity-african-american-black-dellon-thomas",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/dellon-thomas-Fp8uh-Ls4ic-unsplash~2.jpg",
+        group: "Ethnicity / heritage",
+        value: "African American / Black",
+        visibleTraits: ["Ethnicity / heritage"],
+        context: {},
+        alt: "Photorealistic portrait reference for the African American / Black heritage selection",
+        creator: "Dellon Thomas",
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/dellon-thomas-Fp8uh-Ls4ic-unsplash~2.jpg",
+        license: "User-provided image"
+      },
+      {
         id: "eye-color-brown-pexels-32316907",
         src: "https://images.pexels.com/photos/32316907/pexels-photo-32316907.jpeg",
         group: "Eye color",
