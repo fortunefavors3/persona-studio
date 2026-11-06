@@ -7,6 +7,18 @@
     version: 3,
     images: [
       {
+        id: "ethnicity-afro-caribbean-jabari-timothy",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/jabari-timothy-Sj9kHF39jII-unsplash~2.jpg",
+        group: "Ethnicity / heritage",
+        value: "Afro-Caribbean",
+        visibleTraits: ["Ethnicity / heritage"],
+        context: {},
+        alt: "Photorealistic portrait reference for the Afro-Caribbean heritage selection",
+        creator: "Jabari Timothy",
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/jabari-timothy-Sj9kHF39jII-unsplash~2.jpg",
+        license: "User-provided image"
+      },
+      {
         id: "ethnicity-african-american-black-dellon-thomas",
         src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/dellon-thomas-Fp8uh-Ls4ic-unsplash~2.jpg",
         group: "Ethnicity / heritage",
