@@ -485,7 +485,7 @@
         creator: "User-provided",
         source: "/assets/reference-images/1794036655196.jpg",
         license: "User-provided image"
-      },,
+      },
       {
         id: "lip-shape-full",
         src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/29e7db0f-32cd-47a0-9878-f4afa52af6e3.jpeg",
@@ -546,30 +546,6 @@
         source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image%20(2).jpg",
         license: "User-provided image"
       },
-      {
-        id: "lip-shape-full-alt",
-        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/persona-studio-image%20(3).jpg",
-        group: "Lip shape",
-        value: "Full",
-        visibleTraits: ["Lip shape"],
-        context: {},
-        alt: "User-provided photographic reference for full lip shape; placeholder label to be reviewed",
-        creator: "User-provided",
-        source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image%20(3).jpg",
-        license: "User-provided image"
-      },
-      {
-        id: "lip-shape-medium-alt",
-        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/persona-studio-image.jpg",
-        group: "Lip shape",
-        value: "Medium",
-        visibleTraits: ["Lip shape"],
-        context: {},
-        alt: "User-provided photographic reference for medium lip shape; placeholder label to be reviewed",
-        creator: "User-provided",
-        source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image.jpg",
-        license: "User-provided image"
-      }
     ]
   };
 
