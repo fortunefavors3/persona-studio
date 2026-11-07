@@ -115,6 +115,30 @@
         license: "Pexels License"
       },
       {
+        id: "eye-shape-downturned-user",
+        src: "/assets/reference-images/1794022337471.jpg",
+        group: "Eye shape",
+        value: "Downturned",
+        visibleTraits: ["Eye shape"],
+        context: {},
+        alt: "Photorealistic close-up reference showing downturned eye shape",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794022337471.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "eye-shape-monolid-user",
+        src: "/assets/reference-images/1794022343874.jpg",
+        group: "Eye shape",
+        value: "Monolid",
+        visibleTraits: ["Eye shape"],
+        context: {},
+        alt: "Photorealistic close-up reference showing monolid eye shape",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794022343874.jpg",
+        license: "User-provided image"
+      },
+      {
         id: "hair-color-black",
         src: "https://images.pexels.com/photos/36120417/pexels-photo-36120417.jpeg",
         group: "Hair color",
@@ -139,16 +163,16 @@
         license: "User-provided image"
       },
       {
-        id: "hair-color-dark-brown",
-        src: "https://images.pexels.com/photos/16397925/pexels-photo-16397925.jpeg",
+        id: "hair-color-dark-brown-user",
+        src: "/assets/reference-images/1794022331213.jpg",
         group: "Hair color",
         value: "Dark brown",
         visibleTraits: ["Hair color"],
         context: {},
-        alt: "Photorealistic portrait of an adult woman with dark brown hair",
-        creator: "Alexander Krivitskiy",
-        source: "https://www.pexels.com/photo/woman-with-brown-hair-16397925/",
-        license: "Pexels License"
+        alt: "Photorealistic reference showing dark brown hair",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794022331213.jpg",
+        license: "User-provided image"
       },
       {
         id: "hair-color-auburn",
