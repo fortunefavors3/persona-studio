@@ -8,8 +8,10 @@ export default {
 
     if (url.pathname === "/api/config" && request.method === "GET") {
       return json({
-        provider: "google-gemini",
+        provider: env.GEMINI_API_KEY ? "google-gemini-with-fallback" : (env.FAL_KEY ? "fal-ai" : "cloudflare-workers-ai"),
         geminiAvailable: !!env.GEMINI_API_KEY,
+        falAvailable: !!env.FAL_KEY,
+        cloudflareAiAvailable: !!env.AI,
         xaviraAvailable: !!env.XAVIRA_API_KEY
       });
     }
@@ -133,50 +135,104 @@ export default {
           return json({ error: "Xavira did not return an image or generation ID." }, 502);
         }
 
-        if (!env.GEMINI_API_KEY) {
-          return json({ error: "Google Gemini image generation is not configured yet. Add the GEMINI_API_KEY secret to this Cloudflare Worker, then try again." }, 503);
-        }
         const aspectRatio = ({
-          portrait_4_3: "3:4",
-          portrait_16_9: "9:16",
-          square: "1:1",
-          landscape_4_3: "4:3",
-          landscape_16_9: "16:9"
-        })[body.aspectRatio] || "3:4";
-        const geminiResponse = await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent",
-          {
+          portrait_4_3: "portrait_4_3",
+          portrait_16_9: "portrait_16_9",
+          square: "square",
+          landscape_4_3: "landscape_4_3",
+          landscape_16_9: "landscape_16_9"
+        })[body.aspectRatio] || "portrait_4_3";
+        const falGenerate = async () => {
+          if (!env.FAL_KEY) return null;
+          const endpoint = referenceImage ? "https://fal.run/fal-ai/flux-2-flex/edit" : "https://fal.run/fal-ai/flux-2-flex";
+          const response = await fetch(endpoint, {
             method: "POST",
-            headers: {
-              "x-goog-api-key": env.GEMINI_API_KEY,
-              "Content-Type": "application/json"
-            },
+            headers: { "Authorization": "Key " + env.FAL_KEY, "Content-Type": "application/json" },
             body: JSON.stringify({
-              contents: [{ role: "user", parts: [{ text: prompt }] }],
-              generationConfig: {
-                responseModalities: ["IMAGE"],
-                imageConfig: { aspectRatio, imageSize: "2K" }
-              }
+              prompt,
+              image_size: aspectRatio,
+              num_inference_steps: 28,
+              guidance_scale: 3.5,
+              enable_safety_checker: true,
+              safety_tolerance: 5,
+              output_format: "jpeg",
+              ...(referenceImage ? { image_urls: [referenceImage] } : {}),
+              ...(seed !== null ? { seed } : {})
             })
+          });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(typeof data.detail === "string" ? data.detail : (data.error || "fal.ai image generation failed."));
+          const imageUrl = data.images?.[0]?.url;
+          if (!imageUrl) throw new Error("fal.ai returned no image.");
+          const output = new URL(imageUrl);
+          if (output.protocol !== "https:") throw new Error("fal.ai returned an unexpected image URL.");
+          const image = await fetch(output.toString());
+          if (!image.ok) throw new Error("Could not retrieve the generated image from fal.ai.");
+          return new Response(image.body, { headers: { ...headers, "Content-Type": image.headers.get("Content-Type") || "image/jpeg", "X-Image-Provider": "fal-ai-fallback" } });
+        };
+        const workersAiGenerate = async () => {
+          if (!env.AI) throw new Error("No fallback image provider is configured. Add FAL_KEY or restore the Cloudflare AI binding.");
+          if (referenceImage) throw new Error("Reference-image editing is unavailable on the free fallback. Disable Use reference image or configure fal.ai.");
+          const result = await env.AI.run("@cf/black-forest-labs/flux-1-schnell", { prompt, steps: 4 });
+          if (!result?.image) throw new Error("Cloudflare Workers AI returned no image.");
+          const binary = atob(result.image);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+          return new Response(bytes, { headers: { ...headers, "Content-Type": "image/jpeg", "X-Image-Provider": "cloudflare-workers-ai-fallback" } });
+        };
+
+        let geminiFailure = null;
+        if (env.GEMINI_API_KEY) {
+          try {
+            const geminiResponse = await fetch(
+              "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent",
+              {
+                method: "POST",
+                headers: { "x-goog-api-key": env.GEMINI_API_KEY, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  contents: [{ role: "user", parts: [{ text: prompt }] }],
+                  generationConfig: {
+                    responseModalities: ["IMAGE"],
+                    imageConfig: {
+                      aspectRatio: ({ portrait_4_3: "3:4", portrait_16_9: "9:16", square: "1:1", landscape_4_3: "4:3", landscape_16_9: "16:9" })[body.aspectRatio] || "3:4",
+                      imageSize: "2K"
+                    }
+                  }
+                })
+              }
+            );
+            const geminiData = await geminiResponse.json().catch(() => ({}));
+            if (!geminiResponse.ok) throw new Error(geminiData.error?.message || "Google Gemini image generation failed.");
+            const imagePart = (geminiData.candidates?.[0]?.content?.parts || []).find(part => part.inlineData?.data);
+            if (!imagePart) {
+              const reason = geminiData.promptFeedback?.blockReason;
+              throw new Error(reason ? "Google Gemini blocked this prompt: " + reason : "Google Gemini returned no image.");
+            }
+            const mimeType = imagePart.inlineData.mimeType || "image/png";
+            if (!/^image\/(png|jpeg|webp)$/i.test(mimeType)) throw new Error("Google Gemini returned an unsupported image format.");
+            const binary = atob(imagePart.inlineData.data);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            return new Response(bytes, { headers: { ...headers, "Content-Type": mimeType, "X-Image-Provider": "google-gemini" } });
+          } catch (error) {
+            geminiFailure = error;
           }
-        );
-        const geminiData = await geminiResponse.json().catch(() => ({}));
-        if (!geminiResponse.ok) {
-          const detail = geminiData.error?.message || "Google Gemini image generation failed.";
-          return json({ error: detail }, geminiResponse.status);
+        } else {
+          geminiFailure = new Error("Gemini is not configured.");
         }
-        const parts = geminiData.candidates?.[0]?.content?.parts || [];
-        const imagePart = parts.find(part => part.inlineData?.data);
-        if (!imagePart) {
-          const reason = geminiData.promptFeedback?.blockReason;
-          return json({ error: reason ? "Google Gemini blocked this prompt: " + reason : "Google Gemini returned no image. Try adjusting the prompt." }, 502);
+
+        // Gemini quota, billing, or availability errors automatically fall back to fal.ai,
+        // then to the existing Cloudflare Workers AI binding when fal.ai is unavailable.
+        if (env.FAL_KEY) {
+          try { return await falGenerate(); }
+          catch (falError) {
+            if (!env.AI) return json({ error: "Gemini unavailable (" + geminiFailure.message + "); fal.ai fallback failed (" + falError.message + ")." }, 502);
+          }
         }
-        const mimeType = imagePart.inlineData.mimeType || "image/png";
-        if (!/^image\/(png|jpeg|webp)$/i.test(mimeType)) return json({ error: "Google Gemini returned an unsupported image format." }, 502);
-        const binary = atob(imagePart.inlineData.data);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        return new Response(bytes, { headers: { ...headers, "Content-Type": mimeType } });
+        try { return await workersAiGenerate(); }
+        catch (fallbackError) {
+          return json({ error: "Gemini unavailable (" + geminiFailure.message + "). Fallback failed: " + fallbackError.message }, 503);
+        }
       } catch (error) { return json({ error: error?.message || "Image generation failed." }, 502); }
     }
 
