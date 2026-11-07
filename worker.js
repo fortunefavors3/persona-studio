@@ -26,100 +26,101 @@ export default {
 
     if (url.pathname === "/api/config" && request.method === "GET") {
       return json({
-        provider: env.GEMINI_API_KEY ? "google-gemini-with-fallback" : (env.FAL_KEY ? "fal-ai" : "cloudflare-workers-ai"),
+        provider: env.EROQ_API_KEY ? "eroq-mature-plus-gemini-standard" : (env.GEMINI_API_KEY ? "google-gemini-with-fallback" : (env.FAL_KEY ? "fal-ai" : "cloudflare-workers-ai")),
         geminiAvailable: !!env.GEMINI_API_KEY,
         falAvailable: !!env.FAL_KEY,
         cloudflareAiAvailable: !!env.AI,
-        xaviraAvailable: !!env.XAVIRA_API_KEY
+        eroqAvailable: !!env.EROQ_API_KEY
       });
     }
 
-    if (url.pathname === "/api/xavira/character") {
+    const eroqRequest = async (path, init = {}) => fetchWithTimeout("https://eroq.ai/v1" + path, {
+      ...init, headers: { "Authorization": "Bearer " + env.EROQ_API_KEY, "Content-Type": "application/json", ...(init.headers || {}) }
+    });
+    const eroqError = (data, fallback) => data?.message || data?.error?.message || data?.error || data?.detail || fallback;
+
+    if (url.pathname === "/api/eroq/character") {
       if (request.method !== "POST") return json({ error: "Use POST to create a character." }, 405);
       const limited = await applyRateLimit(env.CHARACTER_LIMITER, "Too many character requests. Wait one minute and try again.");
       if (limited) return limited;
-      if (!env.XAVIRA_API_KEY) return json({ error: "Xavira is not configured. Add the XAVIRA_API_KEY secret to your Cloudflare Worker." }, 503);
+      if (!env.EROQ_API_KEY) return json({ error: "Eroq is not connected yet. Add the EROQ_API_KEY secret to your Cloudflare Worker." }, 503);
       let body;
       try { body = await readJson(request, 8192); } catch (error) { return json({ error: error.message === "Request body is too large." ? error.message : "Send valid character details." }, error.message === "Request body is too large." ? 413 : 400); }
-      const name = typeof body.name === "string" ? body.name.trim().slice(0, 60) : "Look Here Sin character";
-      const appearance = typeof body.look === "string" ? body.look.trim().slice(0, 300) : "";
       const age = Number(body.age);
-      const gender = body.gender === "male" ? "male" : "female";
-      const requestedEthnicity = typeof body.ethnicity === "string" ? body.ethnicity.trim().toLowerCase() : "";
-      const ethnicity = /african american|black|afro-caribbean|west african|east african/.test(requestedEthnicity)
-        ? "black"
-        : /latina|hispanic/.test(requestedEthnicity) ? "hispanic"
-        : /east asian/.test(requestedEthnicity) ? "east-asian"
-        : /south.?east asian/.test(requestedEthnicity) ? "south-east-asian"
-        : /south asian|indian/.test(requestedEthnicity) ? "indian"
-        : /middle eastern|north african/.test(requestedEthnicity) ? "middle-eastern"
-        : /white|european/.test(requestedEthnicity) ? "white"
-        : undefined;
-      const rawHairColor = typeof body.hairColor === "string" ? body.hairColor.trim().toLowerCase() : "";
-      const hairColor = /black/.test(rawHairColor) ? "black"
-        : /brown|chestnut|brunette/.test(rawHairColor) ? "brown"
-        : /blonde|blond/.test(rawHairColor) ? "blonde"
-        : /red|ginger|auburn|copper/.test(rawHairColor) ? "auburn"
-        : /grey|gray/.test(rawHairColor) ? "grey"
-        : /white|silver/.test(rawHairColor) ? "white" : "brown";
-      const rawHairLength = typeof body.hairLength === "string" ? body.hairLength.trim().toLowerCase() : "";
-      const hairLength = /short|pixie|cropped/.test(rawHairLength) ? "short"
-        : /medium|shoulder/.test(rawHairLength) ? "medium" : "long";
-      const rawBuild = typeof body.build === "string" ? body.build.trim().toLowerCase() : "";
-      const build = /petite/.test(rawBuild) ? "petite"
-        : /slim|thin/.test(rawBuild) ? "slim"
-        : /athletic|muscular|toned/.test(rawBuild) ? "athletic"
-        : /curvy/.test(rawBuild) ? "curvy"
-        : /voluptuous|plus.?size|full.?figured/.test(rawBuild) ? "voluptuous" : undefined;
-      const ageRange = age >= 50 ? "50-plus" : age >= 40 ? "40-plus" : age >= 30 ? "30-39" : age >= 23 ? "23-29" : "18-22";
-      const traits = {
-        gender,
-        ...(ethnicity ? { ethnicity } : {}),
-        ageRange,
-        hairLength,
-        hairColor,
-        ...(build ? { build } : {})
-      };
-      const skinTone = typeof body.skinTone === "string" ? body.skinTone.trim() : "";
-      const hairTexture = typeof body.hairTexture === "string" ? body.hairTexture.trim() : "";
-      const appearanceDetails = [skinTone ? "skin tone: " + skinTone : "", hairTexture ? "hair texture: " + hairTexture : ""].filter(Boolean).join("; ");
-      const idem = typeof body.idempotencyKey === "string" && /^[a-zA-Z0-9_-]{12,100}$/.test(body.idempotencyKey)
-        ? body.idempotencyKey : crypto.randomUUID();
+      if (!Number.isFinite(age) || age < 18 || age > 110) return json({ error: "Mature-mode characters must be adults aged 18 or older." }, 400);
+      const name = typeof body.name === "string" ? body.name.trim().slice(0, 80) : "Fictional adult character";
+      const look = typeof body.look === "string" ? body.look.trim().slice(0, 1800) : "";
+      const details = [look, body.ethnicity, body.skinTone, body.hairColor, body.hairTexture, body.hairLength, body.build].filter(x => typeof x === "string" && x.trim()).map(x => x.trim()).join("; ").slice(0, 2000);
       try {
-        const response = await fetchWithTimeout("https://api.xavira.ai/v1/characters", {
-          method: "POST",
-          headers: { "Authorization": "Bearer " + env.XAVIRA_API_KEY, "Content-Type": "application/json", "Idempotency-Key": idem },
-          body: JSON.stringify({ model_id: "realistic-v2", traits, name, scene: appearanceDetails ? "Neutral studio portrait. " + appearanceDetails : "Neutral studio portrait.", wait: true })
-        });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) return json({ error: data.message || data.error?.message || data.error || "Xavira could not create the character." }, response.status);
-        if (!data.character_id) return json({ error: "Xavira did not return a character ID." }, 502);
-        return json({ characterId: data.character_id, status: data.status || "ready" });
-      } catch (error) { return json({ error: error.message || "Could not connect to Xavira." }, 502); }
+        const created = await eroqRequest("/characters", { method: "POST", body: JSON.stringify({
+          name, age: Math.floor(age), gender: body.gender === "male" ? "male" : "female",
+          prompt: "Fictional adult character. " + details,
+          description: details || "Fictional adult character; preserve the same facial identity and appearance.", style: "photoreal"
+        }) });
+        const characterData = await created.json().catch(() => ({}));
+        if (!created.ok) return json({ error: eroqError(characterData, "Eroq could not create the character.") }, created.status);
+        const characterId = characterData.id || characterData.character?.id || characterData.character_id;
+        if (!characterId || !/^[a-zA-Z0-9_-]{4,200}$/.test(characterId)) return json({ error: "Eroq did not return a valid character ID." }, 502);
+        const sheet = await eroqRequest("/sheets", { method: "POST", body: JSON.stringify({
+          target: "char:" + characterId, consent: true, layout: "turnaround", style: "match",
+          description: details || "Photorealistic adult fictional character. Maintain the same face, hair, skin tone and proportions."
+        }) });
+        const sheetData = await sheet.json().catch(() => ({}));
+        if (!sheet.ok) return json({ error: eroqError(sheetData, "Eroq could not prepare the character identity sheet.") }, sheet.status);
+        const sheetJobId = sheetData.job?.id || sheetData.jobs?.[0]?.id || sheetData.id || sheetData.job_id;
+        if (!sheetJobId) return json({ error: "Eroq did not return a character identity-sheet job." }, 502);
+        return json({ characterId, sheetJobId, status: "preparing" }, 202);
+      } catch (error) { return json({ error: error.message || "Could not connect to Eroq." }, 502); }
     }
 
-    if (url.pathname === "/api/xavira/status" && request.method === "GET") {
-      if (!env.XAVIRA_API_KEY) return json({ error: "Xavira is not configured. Add the XAVIRA_API_KEY secret to your Cloudflare Worker." }, 503);
-      const statusLimited = await applyRateLimit(env.STATUS_LIMITER, "Too many status checks. Wait a minute and try again.");
-      if (statusLimited) return statusLimited;
-      const id = url.searchParams.get("id") || "";
-      if (!/^[a-zA-Z0-9_-]{8,200}$/.test(id)) return json({ error: "Invalid generation ID." }, 400);
+    if (url.pathname === "/api/eroq/sheet-status" && request.method === "GET") {
+      if (!env.EROQ_API_KEY) return json({ error: "Eroq is not connected. Add EROQ_API_KEY in Cloudflare." }, 503);
+      const limited = await applyRateLimit(env.STATUS_LIMITER, "Too many status checks. Wait a minute and try again.");
+      if (limited) return limited;
+      const id = url.searchParams.get("id") || "", characterId = url.searchParams.get("characterId") || "";
+      if (!/^[a-zA-Z0-9_-]{4,200}$/.test(id) || !/^[a-zA-Z0-9_-]{4,200}$/.test(characterId)) return json({ error: "Invalid character sheet job." }, 400);
       try {
-        const response = await fetchWithTimeout("https://api.xavira.ai/v1/generations/" + id, {
-          headers: { "Authorization": "Bearer " + env.XAVIRA_API_KEY }
-        });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) return json({ error: data.message || data.error?.message || "Could not check generation status." }, response.status);
-        if (data.status !== "completed" || !data.output_url) {
-          if (["failed", "cancelled", "timed_out"].includes(data.status)) return json({ error: data.error_message || "Xavira generation did not complete." }, 502);
-          return json({ status: data.status || "pending" }, 202);
+        const poll = await eroqRequest("/images/generations/" + encodeURIComponent(id), { method: "GET" });
+        const data = await poll.json().catch(() => ({}));
+        if (!poll.ok) return json({ error: eroqError(data, "Could not check the character sheet.") }, poll.status);
+        if (data.status === "failed" || data.status === "cancelled") return json({ error: data.error?.message || "Eroq could not prepare the character identity sheet." }, 502);
+        if (data.status !== "succeeded") return json({ status: data.status || "pending" }, 202);
+        const creationId = Array.isArray(data.data) ? (data.data[0]?.library_id || data.data[0]?.creation_id) : null;
+        if (!creationId) return json({ error: "Eroq completed the sheet but did not return its library creation ID." }, 502);
+        const applied = await eroqRequest("/sheets/apply", { method: "POST", body: JSON.stringify({ target: "char:" + characterId, creation_id: creationId }) });
+        const appliedData = await applied.json().catch(() => ({}));
+        if (!applied.ok) return json({ error: eroqError(appliedData, "Eroq could not activate the character identity sheet.") }, applied.status);
+        return json({ status: "ready", characterId });
+      } catch (error) { return json({ error: error.message || "Could not finish the character identity sheet." }, 502); }
+    }
+
+    if (url.pathname === "/api/eroq/status" && request.method === "GET") {
+      if (!env.EROQ_API_KEY) return json({ error: "Eroq is not connected. Add EROQ_API_KEY in Cloudflare." }, 503);
+      const limited = await applyRateLimit(env.STATUS_LIMITER, "Too many status checks. Wait a minute and try again.");
+      if (limited) return limited;
+      const id = url.searchParams.get("id") || "";
+      if (!/^[a-zA-Z0-9_-]{4,200}$/.test(id)) return json({ error: "Invalid generation ID." }, 400);
+      try {
+        const poll = await eroqRequest("/images/generations/" + encodeURIComponent(id), { method: "GET" });
+        const data = await poll.json().catch(() => ({}));
+        if (!poll.ok) return json({ error: eroqError(data, "Could not check Eroq generation status.") }, poll.status);
+        if (data.status === "failed" || data.status === "cancelled") return json({ error: data.error?.message || "Eroq image generation failed." }, 502);
+        if (data.status !== "succeeded") return json({ status: data.status || "pending" }, 202);
+        const take = Array.isArray(data.data) ? data.data[0] : null;
+        if (!take) return json({ error: "Eroq completed without returning an image." }, 502);
+        if (typeof take.b64_json === "string") {
+          const binary = atob(take.b64_json), bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+          return new Response(bytes, { headers: { ...headers, "Content-Type": take.mime_type || "image/png" } });
         }
-        const output = new URL(data.output_url);
-        if (output.protocol !== "https:") return json({ error: "Xavira returned an unexpected image URL." }, 502);
+        const imageUrl = take.url || take.image_url;
+        if (typeof imageUrl !== "string") return json({ error: "Eroq did not return an image URL." }, 502);
+        const output = new URL(imageUrl);
+        if (output.protocol !== "https:") return json({ error: "Eroq returned an unexpected image URL." }, 502);
         const image = await fetchWithTimeout(output.toString());
-        if (!image.ok) return json({ error: "Could not retrieve the generated image." }, 502);
+        if (!image.ok) return json({ error: "Could not retrieve the image from Eroq." }, 502);
         return new Response(image.body, { headers: { ...headers, "Content-Type": image.headers.get("Content-Type") || "image/png" } });
-      } catch (error) { return json({ error: error.message || "Could not check Xavira generation." }, 502); }
+      } catch (error) { return json({ error: error.message || "Could not retrieve the Eroq image." }, 502); }
     }
 
     if (url.pathname === "/api/generate") {
@@ -144,29 +145,20 @@ export default {
 
       try {
         if (mature) {
-          if (!env.XAVIRA_API_KEY) return json({ error: "Mature mode needs Xavira. Add the XAVIRA_API_KEY secret in Cloudflare and redeploy." }, 503);
-          if (referenceImage) return json({ error: "Xavira reference-image use is separately gated and requires its approval process. This generation will use the saved text-based character identity instead; turn off Use reference image and try again." }, 400);
+          if (!env.EROQ_API_KEY) return json({ error: "Mature mode needs Eroq. Add the EROQ_API_KEY secret in Cloudflare." }, 503);
           const characterId = typeof body.characterId === "string" ? body.characterId : "";
-          if (!/^[a-zA-Z0-9_-]{8,200}$/.test(characterId)) return json({ error: "Create or select this persona's Xavira character first, then try again." }, 400);
-          const idem = typeof body.idempotencyKey === "string" && /^[a-zA-Z0-9_-]{12,100}$/.test(body.idempotencyKey) ? body.idempotencyKey : crypto.randomUUID();
-          const response = await fetchWithTimeout("https://api.xavira.ai/v1/images:generate", {
-            method: "POST",
-            headers: { "Authorization": "Bearer " + env.XAVIRA_API_KEY, "Content-Type": "application/json", "Idempotency-Key": idem },
-            body: JSON.stringify({ character_id: characterId, prompt: prompt.slice(0, 2000), resolution: "hd_portrait", hires_fix: "1.25x", ...(seed !== null ? { seed } : {}) })
-          });
+          if (!/^[a-zA-Z0-9_-]{4,200}$/.test(characterId)) return json({ error: "Create or select this adult persona first so Eroq can preserve its identity." }, 400);
+          const response = await eroqRequest("/images/generations", { method: "POST", body: JSON.stringify({
+            model: "eroq-uncensored", prompt, elements: ["char:" + characterId],
+            aspect: ({ portrait_4_3: "3:4", portrait_16_9: "9:16", square: "1:1", landscape_4_3: "4:3", landscape_16_9: "16:9" })[body.aspectRatio] || "3:4",
+            private: true, batch: 1
+          }) });
           const data = await response.json().catch(() => ({}));
-          if (!response.ok) return json({ error: data.message || data.error?.message || data.error || "Xavira image generation failed." }, response.status);
-          if (data.status === "completed" && data.output_url) {
-            const output = new URL(data.output_url);
-            if (output.protocol !== "https:" || output.hostname !== "pub-202d3c54d6e442d592b80751c50c9c78.r2.dev") return json({ error: "Xavira returned an unexpected image host." }, 502);
-            const image = await fetchWithTimeout(output.toString());
-            if (!image.ok) return json({ error: "Could not retrieve the generated image from Xavira." }, 502);
-            return new Response(image.body, { headers: { ...headers, "Content-Type": image.headers.get("Content-Type") || "image/png" } });
-          }
-          if (data.generation_id) return json({ pending: true, generationId: data.generation_id }, 202);
-          return json({ error: "Xavira did not return an image or generation ID." }, 502);
+          if (!response.ok) return json({ error: eroqError(data, "Eroq image generation failed.") }, response.status);
+          const generationId = data.jobs?.[0]?.id || data.job?.id || data.id;
+          if (!generationId) return json({ error: "Eroq did not return a generation job ID." }, 502);
+          return json({ pending: true, generationId, provider: "eroq" }, 202);
         }
-
         const aspectRatio = ({
           portrait_4_3: "portrait_4_3",
           portrait_16_9: "portrait_16_9",
