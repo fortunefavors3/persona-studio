@@ -485,7 +485,91 @@
         creator: "User-provided",
         source: "/assets/reference-images/1794036655196.jpg",
         license: "User-provided image"
+      },,
+      {
+        id: "lip-shape-full",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/29e7db0f-32cd-47a0-9878-f4afa52af6e3.jpeg",
+        group: "Lip shape",
+        value: "Full",
+        visibleTraits: ["Lip shape"],
+        context: {},
+        alt: "User-provided photographic reference for full lip shape; placeholder label to be reviewed",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/29e7db0f-32cd-47a0-9878-f4afa52af6e3.jpeg",
+        license: "User-provided image"
       },
+      {
+        id: "lip-shape-medium",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/3b5b6cc2-7eed-4ec4-9243-8c03a746f232.jpeg",
+        group: "Lip shape",
+        value: "Medium",
+        visibleTraits: ["Lip shape"],
+        context: {},
+        alt: "User-provided photographic reference for medium lip shape; placeholder label to be reviewed",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/3b5b6cc2-7eed-4ec4-9243-8c03a746f232.jpeg",
+        license: "User-provided image"
+      },
+      {
+        id: "lip-shape-thin",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/c26e11c9-b415-43cd-9beb-a06dea146bce.jpeg",
+        group: "Lip shape",
+        value: "Thin",
+        visibleTraits: ["Lip shape"],
+        context: {},
+        alt: "User-provided photographic reference for thin lip shape; placeholder label to be reviewed",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/c26e11c9-b415-43cd-9beb-a06dea146bce.jpeg",
+        license: "User-provided image"
+      },
+      {
+        id: "lip-shape-cupid-bow",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/persona-studio-image%20(1).jpg",
+        group: "Lip shape",
+        value: "Cupid bow",
+        visibleTraits: ["Lip shape"],
+        context: {},
+        alt: "User-provided photographic reference for cupid bow lip shape; placeholder label to be reviewed",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image%20(1).jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "lip-shape-wide",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/persona-studio-image%20(2).jpg",
+        group: "Lip shape",
+        value: "Wide",
+        visibleTraits: ["Lip shape"],
+        context: {},
+        alt: "User-provided photographic reference for wide lip shape; placeholder label to be reviewed",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image%20(2).jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "lip-shape-full-alt",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/persona-studio-image%20(3).jpg",
+        group: "Lip shape",
+        value: "Full",
+        visibleTraits: ["Lip shape"],
+        context: {},
+        alt: "User-provided photographic reference for full lip shape; placeholder label to be reviewed",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image%20(3).jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "lip-shape-medium-alt",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/persona-studio-image.jpg",
+        group: "Lip shape",
+        value: "Medium",
+        visibleTraits: ["Lip shape"],
+        context: {},
+        alt: "User-provided photographic reference for medium lip shape; placeholder label to be reviewed",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image.jpg",
+        license: "User-provided image"
+      }
     ]
   };
 
