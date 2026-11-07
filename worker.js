@@ -30,7 +30,8 @@ export default {
         geminiAvailable: !!env.GEMINI_API_KEY,
         falAvailable: !!env.FAL_KEY,
         cloudflareAiAvailable: !!env.AI,
-        eroqAvailable: !!env.EROQ_API_KEY
+        eroqAvailable: !!env.EROQ_API_KEY,
+        xaviraAvailable: !!env.EROQ_API_KEY
       });
     }
 
@@ -39,7 +40,7 @@ export default {
     });
     const eroqError = (data, fallback) => data?.message || data?.error?.message || data?.error || data?.detail || fallback;
 
-    if (url.pathname === "/api/eroq/character") {
+    if ((url.pathname === "/api/eroq/character" || url.pathname === "/api/xavira/character")) {
       if (request.method !== "POST") return json({ error: "Use POST to create a character." }, 405);
       const limited = await applyRateLimit(env.CHARACTER_LIMITER, "Too many character requests. Wait one minute and try again.");
       if (limited) return limited;
@@ -94,7 +95,7 @@ export default {
       } catch (error) { return json({ error: error.message || "Could not finish the character identity sheet." }, 502); }
     }
 
-    if (url.pathname === "/api/eroq/status" && request.method === "GET") {
+    if ((url.pathname === "/api/eroq/status" || url.pathname === "/api/xavira/status") && request.method === "GET") {
       if (!env.EROQ_API_KEY) return json({ error: "Eroq is not connected. Add EROQ_API_KEY in Cloudflare." }, 503);
       const limited = await applyRateLimit(env.STATUS_LIMITER, "Too many status checks. Wait a minute and try again.");
       if (limited) return limited;
