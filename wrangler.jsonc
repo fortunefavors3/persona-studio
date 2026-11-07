@@ -9,6 +9,34 @@
   "assets": {
     "directory": "./",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
-  }
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "ratelimits": [
+    {
+      "name": "GENERATION_LIMITER",
+      "namespace_id": "persona-studio-generation-v1",
+      "simple": {
+        "limit": 5,
+        "period": 60
+      }
+    },
+    {
+      "name": "CHARACTER_LIMITER",
+      "namespace_id": "persona-studio-character-v1",
+      "simple": {
+        "limit": 3,
+        "period": 60
+      }
+    },
+    {
+      "name": "STATUS_LIMITER",
+      "namespace_id": "persona-studio-status-v1",
+      "simple": {
+        "limit": 60,
+        "period": 60
+      }
+    }
+  ]
 }
