@@ -69,7 +69,7 @@ export default {
         if (!sheet.ok) return json({ error: eroqError(sheetData, "Eroq could not prepare the character identity sheet.") }, sheet.status);
         const sheetJobId = sheetData.job?.id || sheetData.jobs?.[0]?.id || sheetData.id || sheetData.job_id;
         if (!sheetJobId) return json({ error: "Eroq did not return a character identity-sheet job." }, 502);
-        return json({ characterId, sheetJobId, status: "preparing" }, 202);
+        return json({ characterId: characterId + "~" + sheetJobId, status: "preparing" }, 200);
       } catch (error) { return json({ error: error.message || "Could not connect to Eroq." }, 502); }
     }
 
@@ -146,8 +146,20 @@ export default {
       try {
         if (mature) {
           if (!env.EROQ_API_KEY) return json({ error: "Mature mode needs Eroq. Add the EROQ_API_KEY secret in Cloudflare." }, 503);
-          const characterId = typeof body.characterId === "string" ? body.characterId : "";
-          if (!/^[a-zA-Z0-9_-]{4,200}$/.test(characterId)) return json({ error: "Create or select this adult persona first so Eroq can preserve its identity." }, 400);
+          const savedId = typeof body.characterId === "string" ? body.characterId : "";
+          const parts = savedId.split("~");
+          if (parts.length !== 2 || !/^[a-zA-Z0-9_-]{4,200}$/.test(parts[0]) || !/^[a-zA-Z0-9_-]{4,200}$/.test(parts[1])) return json({ error: "Create or select this adult persona first so Eroq can preserve its identity." }, 400);
+          const characterId = parts[0], sheetJobId = parts[1];
+          const sheetPoll = await eroqRequest("/images/generations/" + encodeURIComponent(sheetJobId), { method: "GET" });
+          const sheetData = await sheetPoll.json().catch(() => ({}));
+          if (!sheetPoll.ok) return json({ error: eroqError(sheetData, "Could not check the Eroq character identity sheet.") }, sheetPoll.status);
+          if (sheetData.status === "failed" || sheetData.status === "cancelled") return json({ error: "Eroq could not prepare the character identity sheet. Create the character again." }, 502);
+          if (sheetData.status !== "succeeded") return json({ error: "Eroq is still preparing this character identity. Please wait a few seconds and press Generate image again." }, 425);
+          const creationId = Array.isArray(sheetData.data) ? (sheetData.data[0]?.library_id || sheetData.data[0]?.creation_id) : null;
+          if (!creationId) return json({ error: "Eroq completed the identity sheet but returned no library ID." }, 502);
+          const applied = await eroqRequest("/sheets/apply", { method: "POST", body: JSON.stringify({ target: "char:" + characterId, creation_id: creationId }) });
+          const appliedData = await applied.json().catch(() => ({}));
+          if (!applied.ok) return json({ error: eroqError(appliedData, "Eroq could not activate the character identity sheet.") }, applied.status);
           const response = await eroqRequest("/images/generations", { method: "POST", body: JSON.stringify({
             model: "eroq-uncensored", prompt, elements: ["char:" + characterId],
             aspect: ({ portrait_4_3: "3:4", portrait_16_9: "9:16", square: "1:1", landscape_4_3: "4:3", landscape_16_9: "16:9" })[body.aspectRatio] || "3:4",
