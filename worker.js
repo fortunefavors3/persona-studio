@@ -3,6 +3,24 @@ export default {
     const url = new URL(request.url);
     const json = (data, status = 200) => Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
     const headers = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
+    const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+    const fetchWithTimeout = (input, init = {}) => fetch(input, { ...init, signal: AbortSignal.timeout(60000) });
+    const readJson = async (req, maxBytes) => {
+      const declared = Number(req.headers.get("Content-Length") || 0);
+      if (declared > maxBytes) throw new Error("Request body is too large.");
+      const raw = await req.text();
+      if (new TextEncoder().encode(raw).byteLength > maxBytes) throw new Error("Request body is too large.");
+      return JSON.parse(raw);
+    };
+    const applyRateLimit = async (binding, message) => {
+      if (!binding) return json({ error: "Image protection is temporarily unavailable. Please try again later." }, 503);
+      try {
+        const result = await binding.limit({ key: clientIp });
+        return result.success ? null : json({ error: message }, 429);
+      } catch {
+        return json({ error: "Image protection is temporarily unavailable. Please try again later." }, 503);
+      }
+    };
     const origin = request.headers.get("Origin");
     if (origin && new URL(origin).host !== url.host) return json({ error: "Cross-origin requests are not allowed." }, 403);
 
@@ -18,9 +36,11 @@ export default {
 
     if (url.pathname === "/api/xavira/character") {
       if (request.method !== "POST") return json({ error: "Use POST to create a character." }, 405);
+      const limited = await applyRateLimit(env.CHARACTER_LIMITER, "Too many character requests. Wait one minute and try again.");
+      if (limited) return limited;
       if (!env.XAVIRA_API_KEY) return json({ error: "Xavira is not configured. Add the XAVIRA_API_KEY secret to your Cloudflare Worker." }, 503);
       let body;
-      try { body = await request.json(); } catch { return json({ error: "Send valid character details." }, 400); }
+      try { body = await readJson(request, 8192); } catch (error) { return json({ error: error.message === "Request body is too large." ? error.message : "Send valid character details." }, error.message === "Request body is too large." ? 413 : 400); }
       const name = typeof body.name === "string" ? body.name.trim().slice(0, 60) : "Look Here Sin character";
       const appearance = typeof body.look === "string" ? body.look.trim().slice(0, 300) : "";
       const age = Number(body.age);
@@ -66,7 +86,7 @@ export default {
       const idem = typeof body.idempotencyKey === "string" && /^[a-zA-Z0-9_-]{12,100}$/.test(body.idempotencyKey)
         ? body.idempotencyKey : crypto.randomUUID();
       try {
-        const response = await fetch("https://api.xavira.ai/v1/characters", {
+        const response = await fetchWithTimeout("https://api.xavira.ai/v1/characters", {
           method: "POST",
           headers: { "Authorization": "Bearer " + env.XAVIRA_API_KEY, "Content-Type": "application/json", "Idempotency-Key": idem },
           body: JSON.stringify({ model_id: "realistic-v2", traits, name, scene: appearanceDetails ? "Neutral studio portrait. " + appearanceDetails : "Neutral studio portrait.", wait: true })
@@ -80,10 +100,12 @@ export default {
 
     if (url.pathname === "/api/xavira/status" && request.method === "GET") {
       if (!env.XAVIRA_API_KEY) return json({ error: "Xavira is not configured. Add the XAVIRA_API_KEY secret to your Cloudflare Worker." }, 503);
+      const statusLimited = await applyRateLimit(env.STATUS_LIMITER, "Too many status checks. Wait a minute and try again.");
+      if (statusLimited) return statusLimited;
       const id = url.searchParams.get("id") || "";
       if (!/^[a-zA-Z0-9_-]{8,200}$/.test(id)) return json({ error: "Invalid generation ID." }, 400);
       try {
-        const response = await fetch("https://api.xavira.ai/v1/generations/" + id, {
+        const response = await fetchWithTimeout("https://api.xavira.ai/v1/generations/" + id, {
           headers: { "Authorization": "Bearer " + env.XAVIRA_API_KEY }
         });
         const data = await response.json().catch(() => ({}));
@@ -94,7 +116,7 @@ export default {
         }
         const output = new URL(data.output_url);
         if (output.protocol !== "https:") return json({ error: "Xavira returned an unexpected image URL." }, 502);
-        const image = await fetch(output.toString());
+        const image = await fetchWithTimeout(output.toString());
         if (!image.ok) return json({ error: "Could not retrieve the generated image." }, 502);
         return new Response(image.body, { headers: { ...headers, "Content-Type": image.headers.get("Content-Type") || "image/png" } });
       } catch (error) { return json({ error: error.message || "Could not check Xavira generation." }, 502); }
@@ -102,11 +124,21 @@ export default {
 
     if (url.pathname === "/api/generate") {
       if (request.method !== "POST") return json({ error: "Use POST to generate an image." }, 405);
+      const limited = await applyRateLimit(env.GENERATION_LIMITER, "You have reached the image-generation limit. Wait one minute and try again.");
+      if (limited) return limited;
       let body;
-      try { body = await request.json(); } catch { return json({ error: "Send a valid JSON body." }, 400); }
+      try { body = await readJson(request, 16384); } catch (error) { return json({ error: error.message === "Request body is too large." ? error.message : "Send a valid JSON body." }, error.message === "Request body is too large." ? 413 : 400); }
       const prompt = typeof body.prompt === "string" ? body.prompt.trim() : "";
       const mature = body.mature === true;
-      const referenceImage = typeof body.referenceImage === "string" ? body.referenceImage : "";
+      const referenceImage = typeof body.referenceImage === "string" ? body.referenceImage.trim() : "";
+      if (referenceImage) {
+        if (referenceImage.length > 2048) return json({ error: "Reference image URL is too long." }, 400);
+        try {
+          const ref = new URL(referenceImage);
+          const allowedHosts = [url.hostname, "raw.githubusercontent.com", "images.pexels.com", "images.unsplash.com"];
+          if (ref.protocol !== "https:" || !allowedHosts.includes(ref.hostname)) return json({ error: "Reference image must use a trusted HTTPS image host." }, 400);
+        } catch { return json({ error: "Reference image URL is invalid." }, 400); }
+      }
       const seed = Number.isInteger(body.seed) && body.seed >= 0 && body.seed <= 2147483647 ? body.seed : null;
       if (!prompt || prompt.length > 2000) return json({ error: "Enter a prompt between 1 and 2,000 characters." }, 400);
 
@@ -117,7 +149,7 @@ export default {
           const characterId = typeof body.characterId === "string" ? body.characterId : "";
           if (!/^[a-zA-Z0-9_-]{8,200}$/.test(characterId)) return json({ error: "Create or select this persona's Xavira character first, then try again." }, 400);
           const idem = typeof body.idempotencyKey === "string" && /^[a-zA-Z0-9_-]{12,100}$/.test(body.idempotencyKey) ? body.idempotencyKey : crypto.randomUUID();
-          const response = await fetch("https://api.xavira.ai/v1/images:generate", {
+          const response = await fetchWithTimeout("https://api.xavira.ai/v1/images:generate", {
             method: "POST",
             headers: { "Authorization": "Bearer " + env.XAVIRA_API_KEY, "Content-Type": "application/json", "Idempotency-Key": idem },
             body: JSON.stringify({ character_id: characterId, prompt: prompt.slice(0, 2000), resolution: "hd_portrait", hires_fix: "1.25x", ...(seed !== null ? { seed } : {}) })
@@ -127,7 +159,7 @@ export default {
           if (data.status === "completed" && data.output_url) {
             const output = new URL(data.output_url);
             if (output.protocol !== "https:" || output.hostname !== "pub-202d3c54d6e442d592b80751c50c9c78.r2.dev") return json({ error: "Xavira returned an unexpected image host." }, 502);
-            const image = await fetch(output.toString());
+            const image = await fetchWithTimeout(output.toString());
             if (!image.ok) return json({ error: "Could not retrieve the generated image from Xavira." }, 502);
             return new Response(image.body, { headers: { ...headers, "Content-Type": image.headers.get("Content-Type") || "image/png" } });
           }
@@ -145,7 +177,7 @@ export default {
         const falGenerate = async () => {
           if (!env.FAL_KEY) return null;
           const endpoint = referenceImage ? "https://fal.run/fal-ai/flux-2-flex/edit" : "https://fal.run/fal-ai/flux-2-flex";
-          const response = await fetch(endpoint, {
+          const response = await fetchWithTimeout(endpoint, {
             method: "POST",
             headers: { "Authorization": "Key " + env.FAL_KEY, "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -166,7 +198,7 @@ export default {
           if (!imageUrl) throw new Error("fal.ai returned no image.");
           const output = new URL(imageUrl);
           if (output.protocol !== "https:") throw new Error("fal.ai returned an unexpected image URL.");
-          const image = await fetch(output.toString());
+          const image = await fetchWithTimeout(output.toString());
           if (!image.ok) throw new Error("Could not retrieve the generated image from fal.ai.");
           return new Response(image.body, { headers: { ...headers, "Content-Type": image.headers.get("Content-Type") || "image/jpeg", "X-Image-Provider": "fal-ai-fallback" } });
         };
@@ -184,7 +216,7 @@ export default {
         let geminiFailure = null;
         if (env.GEMINI_API_KEY) {
           try {
-            const geminiResponse = await fetch(
+            const geminiResponse = await fetchWithTimeout(
               "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent",
               {
                 method: "POST",
