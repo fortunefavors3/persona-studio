@@ -13,30 +13,35 @@
       "/api/*"
     ]
   },
-  "ratelimits": [
-    {
-      "name": "GENERATION_LIMITER",
-      "namespace_id": "persona-studio-generation-v1",
-      "simple": {
-        "limit": 5,
-        "period": 60
+  "unsafe": {
+    "bindings": [
+      {
+        "name": "GENERATION_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "persona-studio-generation-v1",
+        "simple": {
+          "limit": 5,
+          "period": 60
+        }
+      },
+      {
+        "name": "CHARACTER_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "persona-studio-character-v1",
+        "simple": {
+          "limit": 3,
+          "period": 60
+        }
+      },
+      {
+        "name": "STATUS_LIMITER",
+        "type": "ratelimit",
+        "namespace_id": "persona-studio-status-v1",
+        "simple": {
+          "limit": 60,
+          "period": 60
+        }
       }
-    },
-    {
-      "name": "CHARACTER_LIMITER",
-      "namespace_id": "persona-studio-character-v1",
-      "simple": {
-        "limit": 3,
-        "period": 60
-      }
-    },
-    {
-      "name": "STATUS_LIMITER",
-      "namespace_id": "persona-studio-status-v1",
-      "simple": {
-        "limit": 60,
-        "period": 60
-      }
-    }
-  ]
+    ]
+  }
 }
