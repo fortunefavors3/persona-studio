@@ -224,51 +224,51 @@
       },
       {
         id: "hair-color-blonde",
-        src: "https://images.pexels.com/photos/19309788/pexels-photo-19309788.jpeg",
+        src: "/assets/reference-images/1794023179059.jpg",
         group: "Hair color",
         value: "Blonde",
         visibleTraits: ["Hair color"],
         context: {},
-        alt: "Photorealistic portrait of an adult woman with blonde hair",
-        creator: "Ekam Juneja",
-        source: "https://www.pexels.com/photo/portrait-of-blonde-woman-19309788/",
-        license: "Pexels License"
+        alt: "Photorealistic reference showing blonde hair",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794023179059.jpg",
+        license: "User-provided image"
       },
       {
         id: "hair-color-platinum-blonde",
-        src: "https://images.pexels.com/photos/35855452/pexels-photo-35855452.jpeg",
+        src: "/assets/reference-images/1794023183734.jpg",
         group: "Hair color",
         value: "Platinum blonde",
         visibleTraits: ["Hair color"],
         context: {},
-        alt: "Photorealistic portrait of an adult with platinum blonde hair",
-        creator: "Khoa Võ",
-        source: "https://www.pexels.com/photo/urban-portrait-of-a-young-adult-with-platinum-hair-35855452/",
-        license: "Pexels License"
+        alt: "Photorealistic reference showing platinum blonde hair",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794023183734.jpg",
+        license: "User-provided image"
       },
       {
         id: "hair-color-silver",
-        src: "https://images.pexels.com/photos/34943056/pexels-photo-34943056.jpeg",
+        src: "/assets/reference-images/1794023188017.jpg",
         group: "Hair color",
         value: "Silver",
         visibleTraits: ["Hair color"],
         context: {},
-        alt: "Photorealistic portrait of an older adult woman with silver hair",
-        creator: "Tony Zohari",
-        source: "https://www.pexels.com/photo/elderly-woman-with-silver-hair-in-thought-34943056/",
-        license: "Pexels License"
+        alt: "Photorealistic reference showing silver hair",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794023188017.jpg",
+        license: "User-provided image"
       },
       {
         id: "hair-color-pastel-pink",
-        src: "https://images.pexels.com/photos/9381420/pexels-photo-9381420.jpeg",
+        src: "/assets/reference-images/1794023192484.jpg",
         group: "Hair color",
         value: "Pastel pink",
         visibleTraits: ["Hair color"],
         context: {},
-        alt: "Photorealistic portrait of an adult woman with pastel pink hair",
-        creator: "Paloma Clarice",
-        source: "https://www.pexels.com/photo/close-up-photo-of-woman-with-pink-hair-9381420/",
-        license: "Pexels License"
+        alt: "Photorealistic reference showing pastel pink hair",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794023192484.jpg",
+        license: "User-provided image"
       },
       {
         id: "hair-color-fantasy",
