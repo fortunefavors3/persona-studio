@@ -8,8 +8,8 @@ export default {
 
     if (url.pathname === "/api/config" && request.method === "GET") {
       return json({
-        provider: env.FAL_KEY ? "fal.ai" : "cloudflare",
-        falAvailable: !!env.FAL_KEY,
+        provider: "google-gemini",
+        geminiAvailable: !!env.GEMINI_API_KEY,
         xaviraAvailable: !!env.XAVIRA_API_KEY
       });
     }
@@ -133,34 +133,50 @@ export default {
           return json({ error: "Xavira did not return an image or generation ID." }, 502);
         }
 
-        if (env.FAL_KEY && body.provider !== "cloudflare") {
-          const falResponse = await fetch(referenceImage ? "https://fal.run/fal-ai/flux-2-flex/edit" : "https://fal.run/fal-ai/flux-2-flex", {
-            method: "POST",
-            headers: { "Authorization": "Key " + env.FAL_KEY, "Content-Type": "application/json" },
-            body: JSON.stringify({
-              prompt,
-              image_size: ({portrait_4_3:"portrait_4_3",portrait_16_9:"portrait_16_9",square:"square",landscape_4_3:"landscape_4_3",landscape_16_9:"landscape_16_9"})[body.aspectRatio] || "portrait_4_3",
-              num_inference_steps: 28, guidance_scale: 3.5, enable_safety_checker: true,
-              safety_tolerance: 5, output_format: "jpeg",
-              ...(referenceImage ? { image_urls: [referenceImage] } : {}),
-              ...(seed !== null ? { seed } : {})
-            })
-          });
-          const data = await falResponse.json().catch(() => ({}));
-          if (!falResponse.ok) return json({ error: typeof data.detail === "string" ? data.detail : (data.error || "fal.ai image generation failed.") }, falResponse.status);
-          const imageUrl = data.images && data.images[0] && data.images[0].url;
-          if (!imageUrl) throw new Error("fal.ai returned no image.");
-          const image = await fetch(imageUrl);
-          if (!image.ok) throw new Error("Could not retrieve the generated image from fal.ai.");
-          return new Response(image.body, { headers: { ...headers, "Content-Type": image.headers.get("Content-Type") || "image/jpeg" } });
+        if (!env.GEMINI_API_KEY) {
+          return json({ error: "Google Gemini image generation is not configured yet. Add the GEMINI_API_KEY secret to this Cloudflare Worker, then try again." }, 503);
         }
-        if (referenceImage) return json({ error: "Character reference editing requires the fal.ai connection. Configure FAL_KEY." }, 503);
-        if (!env.AI) return json({ error: "Neither fal.ai nor the Cloudflare Workers AI binding is configured." }, 503);
-        const result = await env.AI.run("@cf/black-forest-labs/flux-1-schnell", { prompt, steps: 4 });
-        if (!result || !result.image) throw new Error("Cloudflare Workers AI returned no image.");
-        const binary = atob(result.image), bytes = new Uint8Array(binary.length);
+        const aspectRatio = ({
+          portrait_4_3: "3:4",
+          portrait_16_9: "9:16",
+          square: "1:1",
+          landscape_4_3: "4:3",
+          landscape_16_9: "16:9"
+        })[body.aspectRatio] || "3:4";
+        const geminiResponse = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent",
+          {
+            method: "POST",
+            headers: {
+              "x-goog-api-key": env.GEMINI_API_KEY,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              contents: [{ role: "user", parts: [{ text: prompt }] }],
+              generationConfig: {
+                responseModalities: ["IMAGE"],
+                imageConfig: { aspectRatio, imageSize: "2K" }
+              }
+            })
+          }
+        );
+        const geminiData = await geminiResponse.json().catch(() => ({}));
+        if (!geminiResponse.ok) {
+          const detail = geminiData.error?.message || "Google Gemini image generation failed.";
+          return json({ error: detail }, geminiResponse.status);
+        }
+        const parts = geminiData.candidates?.[0]?.content?.parts || [];
+        const imagePart = parts.find(part => part.inlineData?.data);
+        if (!imagePart) {
+          const reason = geminiData.promptFeedback?.blockReason;
+          return json({ error: reason ? "Google Gemini blocked this prompt: " + reason : "Google Gemini returned no image. Try adjusting the prompt." }, 502);
+        }
+        const mimeType = imagePart.inlineData.mimeType || "image/png";
+        if (!/^image\/(png|jpeg|webp)$/i.test(mimeType)) return json({ error: "Google Gemini returned an unsupported image format." }, 502);
+        const binary = atob(imagePart.inlineData.data);
+        const bytes = new Uint8Array(binary.length);
         for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        return new Response(bytes, { headers: { ...headers, "Content-Type": "image/jpeg" } });
+        return new Response(bytes, { headers: { ...headers, "Content-Type": mimeType } });
       } catch (error) { return json({ error: error?.message || "Image generation failed." }, 502); }
     }
 
