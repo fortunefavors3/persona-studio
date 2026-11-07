@@ -414,6 +414,78 @@
         source: "https://www.pexels.com/photo/portrait-of-smiling-old-grey-haired-woman-12644998/",
         license: "Pexels License"
       },
+      {
+        id: "nose-shape-straight",
+        src: "/assets/reference-images/1794036624670.jpg",
+        group: "Nose shape",
+        value: "Straight",
+        visibleTraits: ["Nose shape"],
+        context: {},
+        alt: "Photorealistic close-up reference showing a straight nose profile and bridge",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794036624670.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "nose-shape-button",
+        src: "/assets/reference-images/1794036631889.jpg",
+        group: "Nose shape",
+        value: "Button",
+        visibleTraits: ["Nose shape"],
+        context: {},
+        alt: "Photorealistic close-up reference showing a small button-shaped nose",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794036631889.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "nose-shape-rounded",
+        src: "/assets/reference-images/1794036637361.jpg",
+        group: "Nose shape",
+        value: "Rounded",
+        visibleTraits: ["Nose shape"],
+        context: {},
+        alt: "Photorealistic close-up reference showing a rounded nose tip",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794036637361.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "nose-shape-aquiline",
+        src: "/assets/reference-images/1794036643487.jpg",
+        group: "Nose shape",
+        value: "Aquiline",
+        visibleTraits: ["Nose shape"],
+        context: {},
+        alt: "Photorealistic close-up reference showing an aquiline nose shape",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794036643487.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "nose-shape-wide",
+        src: "/assets/reference-images/1794036649015.jpg",
+        group: "Nose shape",
+        value: "Wide",
+        visibleTraits: ["Nose shape"],
+        context: {},
+        alt: "Photorealistic close-up reference showing a wider nose and nostril base",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794036649015.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "nose-shape-narrow",
+        src: "/assets/reference-images/1794036655196.jpg",
+        group: "Nose shape",
+        value: "Narrow",
+        visibleTraits: ["Nose shape"],
+        context: {},
+        alt: "Photorealistic close-up reference showing a narrow nose shape",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794036655196.jpg",
+        license: "User-provided image"
+      },
     ]
   };
 
