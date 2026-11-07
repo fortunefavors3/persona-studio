@@ -44,39 +44,39 @@
       },
       {
         id: "eye-color-dark-brown-pexels-34369399",
-        src: "https://images.pexels.com/photos/34369399/pexels-photo-34369399.jpeg",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021837759.jpg",
         group: "Eye color",
         value: "Dark brown",
         visibleTraits: ["Eye color"],
         context: {},
-        alt: "Photorealistic macro photograph of a single human eye with a rich dark brown iris",
+        alt: "Photorealistic close-up reference showing a dark brown iris",
         creator: "Nitin Yadav",
-        source: "https://www.pexels.com/photo/close-up-of-a-human-eye-with-rich-brown-iris-34369399/",
-        license: "Pexels License"
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021837759.jpg",
+        license: "User-provided image"
       },
       {
         id: "eye-color-hazel-pexels-32679446",
-        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021466404.jpg",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021847068.jpg",
         group: "Eye color",
         value: "Hazel",
         visibleTraits: ["Eye color"],
         context: {},
         alt: "Photorealistic close-up reference showing a hazel iris",
         creator: "Haim Charbit",
-        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021466404.jpg",
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021847068.jpg",
         license: "User-provided image"
       },
       {
         id: "eye-color-green-pexels-33829464",
-        src: "https://images.pexels.com/photos/33829464/pexels-photo-33829464.jpeg",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021842718.jpg",
         group: "Eye color",
         value: "Green",
         visibleTraits: ["Eye color"],
         context: {},
-        alt: "Photorealistic macro photograph of a single human eye with a green iris",
+        alt: "Photorealistic close-up reference showing a green iris",
         creator: "Burak Uney",
-        source: "https://www.pexels.com/photo/close-up-of-a-human-eye-with-green-iris-33829464/",
-        license: "Pexels License"
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021842718.jpg",
+        license: "User-provided image"
       },
       {
         id: "eye-color-blue-pexels-33441257",
@@ -92,15 +92,15 @@
       },
       {
         id: "eye-color-grey-pexels-7516687",
-        src: "https://images.pexels.com/photos/7516687/pexels-photo-7516687.jpeg",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021852939.jpg",
         group: "Eye color",
         value: "Grey",
         visibleTraits: ["Eye color"],
         context: {},
-        alt: "Photorealistic close-up photograph of a single human eye with a grey iris",
+        alt: "Photorealistic close-up reference showing a grey iris",
         creator: "David Selbert",
-        source: "https://www.pexels.com/photo/gray-eye-of-anonymous-woman-7516687/",
-        license: "Pexels License"
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021852939.jpg",
+        license: "User-provided image"
       },
       {
         id: "eye-color-amber-pexels-16824177",
