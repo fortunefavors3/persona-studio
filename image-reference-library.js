@@ -175,28 +175,52 @@
         license: "User-provided image"
       },
       {
-        id: "hair-color-auburn",
-        src: "https://images.pexels.com/photos/19012853/pexels-photo-19012853.jpeg",
+        id: "hair-color-auburn-user",
+        src: "/assets/reference-images/1794022739185.jpg",
         group: "Hair color",
         value: "Auburn",
         visibleTraits: ["Hair color"],
         context: {},
-        alt: "Photorealistic portrait of an adult woman with auburn hair",
-        creator: "Ноями Noyami",
-        source: "https://www.pexels.com/photo/person-with-auburn-hair-staring-into-camera-19012853/",
-        license: "Pexels License"
+        alt: "Photorealistic reference showing auburn hair",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794022739185.jpg",
+        license: "User-provided image"
       },
       {
-        id: "hair-color-red",
-        src: "https://images.pexels.com/photos/18283225/pexels-photo-18283225.jpeg",
+        id: "hair-color-red-user",
+        src: "/assets/reference-images/1794022745704.jpg",
         group: "Hair color",
         value: "Red",
         visibleTraits: ["Hair color"],
         context: {},
-        alt: "Photorealistic portrait of an adult woman with red hair",
-        creator: "Alexander Zvir",
-        source: "https://www.pexels.com/photo/portrait-of-redhead-woman-18283225/",
-        license: "Pexels License"
+        alt: "Photorealistic reference showing red hair",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794022745704.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "hair-color-copper-user",
+        src: "/assets/reference-images/1794022751590.jpg",
+        group: "Hair color",
+        value: "Copper",
+        visibleTraits: ["Hair color"],
+        context: {},
+        alt: "Photorealistic reference showing copper-colored hair",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794022751590.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "hair-color-honey-blonde-user",
+        src: "/assets/reference-images/1794022757550.jpg",
+        group: "Hair color",
+        value: "Honey blonde",
+        visibleTraits: ["Hair color"],
+        context: {},
+        alt: "Photorealistic reference showing honey blonde hair",
+        creator: "User-provided",
+        source: "/assets/reference-images/1794022757550.jpg",
+        license: "User-provided image"
       },
       {
         id: "hair-color-blonde",
