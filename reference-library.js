@@ -56,15 +56,15 @@
       },
       {
         id: "eye-color-hazel-pexels-32679446",
-        src: "https://images.pexels.com/photos/32679446/pexels-photo-32679446.jpeg",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021466404.jpg",
         group: "Eye color",
         value: "Hazel",
         visibleTraits: ["Eye color"],
         context: {},
-        alt: "Photorealistic macro photograph of a single human eye with a hazel iris",
+        alt: "Photorealistic close-up reference showing a hazel iris",
         creator: "Haim Charbit",
-        source: "https://www.pexels.com/photo/close-up-of-a-human-eye-with-hazel-iris-32679446/",
-        license: "Pexels License"
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021466404.jpg",
+        license: "User-provided image"
       },
       {
         id: "eye-color-green-pexels-33829464",
@@ -80,15 +80,15 @@
       },
       {
         id: "eye-color-blue-pexels-33441257",
-        src: "https://images.pexels.com/photos/33441257/pexels-photo-33441257.jpeg",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021472384.jpg",
         group: "Eye color",
         value: "Blue",
         visibleTraits: ["Eye color"],
         context: {},
-        alt: "Photorealistic macro photograph of a single human eye with a blue iris",
+        alt: "Photorealistic close-up reference showing a blue iris",
         creator: "Cem Gizep",
-        source: "https://www.pexels.com/photo/close-up-of-a-human-blue-eye-33441257/",
-        license: "Pexels License"
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021472384.jpg",
+        license: "User-provided image"
       },
       {
         id: "eye-color-grey-pexels-7516687",
@@ -125,6 +125,18 @@
         creator: "Elo",
         source: "https://www.pexels.com/photo/portrait-of-a-woman-with-natural-hair-against-dark-background-36120417/",
         license: "Pexels License"
+      },
+      {
+        id: "hair-color-chestnut-user",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021478137.jpg",
+        group: "Hair color",
+        value: "Chestnut",
+        visibleTraits: ["Hair color"],
+        context: {},
+        alt: "Photorealistic reference showing chestnut-colored hair",
+        creator: "User-provided",
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021478137.jpg",
+        license: "User-provided image"
       },
       {
         id: "hair-color-dark-brown",
@@ -248,15 +260,15 @@
       },
       {
         id: "hair-length-shoulder",
-        src: "https://images.pexels.com/photos/2149794/pexels-photo-2149794.jpeg",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021485120.jpg",
         group: "Hair length",
         value: "Shoulder length",
         visibleTraits: ["Hair length"],
         context: {},
-        alt: "Photograph showing a woman silhouette with shoulder-length hair",
+        alt: "Photorealistic reference showing shoulder-length hair",
         creator: "Luis Quintero",
-        source: "https://www.pexels.com/photo/silhouette-photography-of-woman-with-shoulder-length-hair-2149794/",
-        license: "Pexels License"
+        source: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794021485120.jpg",
+        license: "User-provided image"
       },
       {
         id: "hair-length-long",
