@@ -534,6 +534,67 @@
         source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image%20(1).jpg",
         license: "User-provided image"
       },
+
+      {
+        id: "face-shape-oval-1794095691509",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794095691509.jpg",
+        group: "Face shape",
+        value: "Oval",
+        visibleTraits: ["Face shape"],
+        context: {},
+        alt: "Front-facing portrait reference illustrating an oval face shape",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794095691509.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "face-shape-square-1794095696064",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794095696064.jpg",
+        group: "Face shape",
+        value: "Square",
+        visibleTraits: ["Face shape"],
+        context: {},
+        alt: "Front-facing portrait reference illustrating a square face shape",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794095696064.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "face-shape-diamond-1794095702580",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794095702580.jpg",
+        group: "Face shape",
+        value: "Diamond",
+        visibleTraits: ["Face shape"],
+        context: {},
+        alt: "Front-facing portrait reference illustrating a diamond face shape",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794095702580.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "face-shape-heart-213b2308",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/213b2308-1621-44f3-8baa-77346f76c26d.jpeg",
+        group: "Face shape",
+        value: "Heart",
+        visibleTraits: ["Face shape"],
+        context: {},
+        alt: "Front-facing portrait reference illustrating a heart-shaped face",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/213b2308-1621-44f3-8baa-77346f76c26d.jpeg",
+        license: "User-provided image"
+      },
+      {
+        id: "face-shape-round-8cbaf5c1",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/8cbaf5c1-dc74-4aab-a4c0-0fdb4c89d332.jpeg",
+        group: "Face shape",
+        value: "Round",
+        visibleTraits: ["Face shape"],
+        context: {},
+        alt: "Front-facing portrait reference illustrating a round face shape",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/8cbaf5c1-dc74-4aab-a4c0-0fdb4c89d332.jpeg",
+        license: "User-provided image"
+      },
       {
         id: "lip-shape-wide",
         src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/persona-studio-image%20(2).jpg",
