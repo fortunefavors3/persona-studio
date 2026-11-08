@@ -678,7 +678,103 @@
         creator: "User-provided",
         source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image%20(2).jpg",
         license: "User-provided image"
+      },,
+      {
+        id: "eyebrows-natural-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127050440.jpg",
+        group: "Eyebrows",
+        value: "Natural",
+        visibleTraits: ["Eyebrows"],
+        context: {},
+        alt: "User-provided eyebrow shape reference: natural",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127050440.jpg",
+        license: "User-provided image"
       },
+      {
+        id: "eyebrows-straight-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127054177.jpg",
+        group: "Eyebrows",
+        value: "Straight",
+        visibleTraits: ["Eyebrows"],
+        context: {},
+        alt: "User-provided eyebrow shape reference: straight",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127054177.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "eyebrows-soft-arch-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127058287.jpg",
+        group: "Eyebrows",
+        value: "Soft arch",
+        visibleTraits: ["Eyebrows"],
+        context: {},
+        alt: "User-provided eyebrow shape reference: soft arch",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127058287.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "eyebrows-high-arch-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127062664.jpg",
+        group: "Eyebrows",
+        value: "High arch",
+        visibleTraits: ["Eyebrows"],
+        context: {},
+        alt: "User-provided eyebrow shape reference: high arch",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127062664.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "eyebrows-full-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127066451.jpg",
+        group: "Eyebrows",
+        value: "Full",
+        visibleTraits: ["Eyebrows"],
+        context: {},
+        alt: "User-provided eyebrow shape reference: full",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127066451.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "eyebrows-fine-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127070235.jpg",
+        group: "Eyebrows",
+        value: "Fine",
+        visibleTraits: ["Eyebrows"],
+        context: {},
+        alt: "User-provided eyebrow shape reference: fine",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127070235.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "eyebrows-rounded-soft-arch-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127073859.jpg",
+        group: "Eyebrows",
+        value: "Soft arch",
+        visibleTraits: ["Eyebrows"],
+        context: {},
+        alt: "User-provided eyebrow shape reference: rounded soft arch",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127073859.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "eyebrows-s-shaped-natural-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127078328.jpg",
+        group: "Eyebrows",
+        value: "Natural",
+        visibleTraits: ["Eyebrows"],
+        context: {},
+        alt: "User-provided eyebrow shape reference: s shaped natural",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127078328.jpg",
+        license: "User-provided image"
+      }
     ]
   };
 
