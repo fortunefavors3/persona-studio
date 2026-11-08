@@ -7,6 +7,78 @@
     version: 3,
     images: [
       {
+        id: "ethnicity-african-american-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794126890289.jpg",
+        group: "Ethnicity / heritage",
+        value: "African American",
+        visibleTraits: ["Ethnicity / heritage"],
+        context: {},
+        alt: "User-provided portrait reference for African American heritage",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794126890289.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "ethnicity-latin-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794126895105.jpg",
+        group: "Ethnicity / heritage",
+        value: "Latin",
+        visibleTraits: ["Ethnicity / heritage"],
+        context: {},
+        alt: "User-provided portrait reference for Latin American heritage",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794126895105.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "ethnicity-middle-eastern-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794126902255.jpg",
+        group: "Ethnicity / heritage",
+        value: "Middle Eastern",
+        visibleTraits: ["Ethnicity / heritage"],
+        context: {},
+        alt: "User-provided portrait reference for Middle Eastern heritage",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794126902255.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "ethnicity-asian-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794126906569.jpg",
+        group: "Ethnicity / heritage",
+        value: "Asian",
+        visibleTraits: ["Ethnicity / heritage"],
+        context: {},
+        alt: "User-provided portrait reference for Asian heritage",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794126906569.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "ethnicity-white-european-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794126912273.jpg",
+        group: "Ethnicity / heritage",
+        value: "White / European",
+        visibleTraits: ["Ethnicity / heritage"],
+        context: {},
+        alt: "User-provided portrait reference for White European heritage",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794126912273.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "ethnicity-mixed-179412",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794126919829.jpg",
+        group: "Ethnicity / heritage",
+        value: "Mixed",
+        visibleTraits: ["Ethnicity / heritage"],
+        context: {},
+        alt: "User-provided portrait reference for mixed heritage heritage",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794126919829.jpg",
+        license: "User-provided image"
+      },
+      {
         id: "ethnicity-afro-caribbean-jabari-timothy",
         src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/jabari-timothy-Sj9kHF39jII-unsplash~2.jpg",
         group: "Ethnicity / heritage",
