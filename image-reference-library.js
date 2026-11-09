@@ -895,6 +895,90 @@
         source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127485000.jpg",
         license: "User-provided image"
       },
+      {
+        id: "body-type-petite-1794188468088",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794188468088.jpg",
+        group: "Body type",
+        value: "Petite",
+        visibleTraits: ["Body type"],
+        context: {},
+        alt: "User-provided full-body visual reference for Petite body type",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794188468088.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "body-type-slim-1794188468092",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794188468092.jpg",
+        group: "Body type",
+        value: "Slim",
+        visibleTraits: ["Body type"],
+        context: {},
+        alt: "User-provided full-body visual reference for Slim body type",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794188468092.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "body-type-athletic-1794188471275",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794188471275.jpg",
+        group: "Body type",
+        value: "Athletic",
+        visibleTraits: ["Body type"],
+        context: {},
+        alt: "User-provided full-body visual reference for Athletic body type",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794188471275.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "body-type-average-1794188474122",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794188474122.jpg",
+        group: "Body type",
+        value: "Average",
+        visibleTraits: ["Body type"],
+        context: {},
+        alt: "User-provided full-body visual reference for Average body type",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794188474122.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "body-type-curvy-1794188478275",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794188478275.jpg",
+        group: "Body type",
+        value: "Curvy",
+        visibleTraits: ["Body type"],
+        context: {},
+        alt: "User-provided full-body visual reference for Curvy body type",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794188478275.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "body-type-voluptuous-1794188480978",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794188480978.jpg",
+        group: "Body type",
+        value: "Voluptuous",
+        visibleTraits: ["Body type"],
+        context: {},
+        alt: "User-provided full-body visual reference for Voluptuous body type",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794188480978.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "body-type-plus-size-1794188483623",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794188483623.jpg",
+        group: "Body type",
+        value: "Plus-size",
+        visibleTraits: ["Body type"],
+        context: {},
+        alt: "User-provided full-body visual reference for Plus-size body type",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794188483623.jpg",
+        license: "User-provided image"
+      }
     ]
   };
 
