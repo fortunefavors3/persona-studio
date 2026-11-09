@@ -750,7 +750,7 @@
         creator: "User-provided",
         source: "https://github.com/fortunefavors3/image-hosting/blob/main/persona-studio-image%20(2).jpg",
         license: "User-provided image"
-      },,
+      },
       {
         id: "eyebrows-natural-179412",
         src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127050440.jpg",
@@ -847,6 +847,54 @@
         source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127078328.jpg",
         license: "User-provided image"
       }
+      {
+        id: "jawline-soft-1794127495199",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127495199.jpg",
+        group: "Jawline",
+        value: "Soft",
+        visibleTraits: ["Jawline"],
+        context: {},
+        alt: "Front-facing portrait reference showing a softly rounded jawline",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127495199.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "jawline-oval-1794127499774",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127499774.jpg",
+        group: "Jawline",
+        value: "Oval",
+        visibleTraits: ["Jawline"],
+        context: {},
+        alt: "Front-facing portrait reference showing a gently tapered oval jawline",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127499774.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "jawline-defined-1794127490102",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127490102.jpg",
+        group: "Jawline",
+        value: "Defined",
+        visibleTraits: ["Jawline"],
+        context: {},
+        alt: "Portrait reference showing a more visibly defined jawline",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127490102.jpg",
+        license: "User-provided image"
+      },
+      {
+        id: "jawline-angular-1794127485000",
+        src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127485000.jpg",
+        group: "Jawline",
+        value: "Angular",
+        visibleTraits: ["Jawline"],
+        context: {},
+        alt: "Front-facing portrait reference showing a broader, more angular jawline",
+        creator: "User-provided",
+        source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127485000.jpg",
+        license: "User-provided image"
+      },
     ]
   };
 
