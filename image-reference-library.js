@@ -847,7 +847,7 @@
         source: "https://github.com/fortunefavors3/image-hosting/blob/main/1794127078328.jpg",
         license: "User-provided image"
       }
-      {
+      ,{
         id: "jawline-soft-1794127495199",
         src: "https://raw.githubusercontent.com/fortunefavors3/image-hosting/main/1794127495199.jpg",
         group: "Jawline",
